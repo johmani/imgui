@@ -1,0 +1,3 @@
+[submodule "extensions/imnodes"]
+	path = extensions/imnodes
+	url = https://github.com/johmani/imnodes

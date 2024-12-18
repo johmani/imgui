@@ -10,8 +10,16 @@ project "ImGui"
 	files
 	{
 		"*.h",
-		"*.cpp"
+		"*.cpp",
+
+		"extensions/**.h",
+		"extensions/**.cpp",
 	}
+
+    includedirs
+    {
+        "."
+    }
 
 	postbuildcommands 
 	{
