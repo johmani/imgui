@@ -727,6 +727,152 @@ export namespace ImGui {
         cb_user_data.ChainCallbackUserData = user_data;
         return InputTextWithHint(label, hint, (char*)str->c_str(), str->capacity() + 1, flags, InputTextCallback, &cb_user_data);
     }
+
+    IMGUI_API bool SelectabelButton(const char* label, const ImVec2& size, bool selected = false)
+    {
+        auto& colors = ImGui::GetStyle().Colors;
+
+        if (selected)
+        {
+            ImGui::PushStyleColor(ImGuiCol_Button, colors[ImGuiCol_ButtonActive]);
+            ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]);
+        }
+
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, colors[ImGuiCol_ButtonActive] - ImVec4(0,0,0,0.1f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, colors[ImGuiCol_ButtonActive]);
+
+        if (ImGui::Button(label, size))
+        {
+            if (selected)
+            {
+                ImGui::PopStyleColor();
+                ImGui::PopFont();
+            }
+            ImGui::PopStyleColor(2);
+
+            return true;
+        }
+
+        if (selected)
+        {
+            ImGui::PopStyleColor();
+            ImGui::PopFont();
+        }
+        ImGui::PopStyleColor(2);
+
+        return false;
+    }
+
+    IMGUI_API void ShiftCursorX(float distance)
+    {
+        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + distance);
+    }
+
+    IMGUI_API void ShiftCursorY(float distance)
+    {
+        ImGui::SetCursorPosY(ImGui::GetCursorPosY() + distance);
+    }
+
+    IMGUI_API void ShiftCursor(float x, float y)
+    {
+        const ImVec2 cursor = ImGui::GetCursorPos();
+        ImGui::SetCursorPos(ImVec2(cursor.x + x, cursor.y + y));
+    }
+
+    struct IMGUI_API ScopedButtonColor
+    {
+        ScopedButtonColor(const ScopedButtonColor&) = delete;
+        ScopedButtonColor operator=(const ScopedButtonColor&) = delete;
+        ScopedButtonColor(const ImVec4& baseColor)
+        {
+            ImGui::PushStyleColor(ImGuiCol_Button, { baseColor.x, baseColor.y, baseColor.z, 0.8f });
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, { baseColor.x, baseColor.y, baseColor.z, 0.9f });
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { baseColor.x, baseColor.y, baseColor.z, 1.0f });
+        }
+        ~ScopedButtonColor() { ImGui::PopStyleColor(3); }
+    };
+
+    struct IMGUI_API ScopedColor
+    {
+        ScopedColor(const ScopedColor&) = delete;
+        ScopedColor operator=(const ScopedColor&) = delete;
+        template<typename T>
+        ScopedColor(ImGuiCol ColorId, T Color) { ImGui::PushStyleColor(ColorId, Color); }
+        ~ScopedColor() { ImGui::PopStyleColor(); }
+    };
+
+    struct IMGUI_API ScopedStyle
+    {
+        ScopedStyle(const ScopedStyle&) = delete;
+        ScopedStyle operator=(const ScopedStyle&) = delete;
+        template<typename T>
+        ScopedStyle(ImGuiStyleVar styleVar, T value) { ImGui::PushStyleVar(styleVar, value); }
+        ~ScopedStyle() { ImGui::PopStyleVar(); }
+    };
+
+    struct IMGUI_API ScopedStyleCompact
+    {
+        ScopedStyleCompact(const ScopedStyleCompact&) = delete;
+        ScopedStyleCompact operator=(const ScopedStyleCompact&) = delete;
+        ScopedStyleCompact(float y)
+        {
+            ImGuiStyle& style = ImGui::GetStyle();
+            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(style.FramePadding.x, style.FramePadding.y * y));
+            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(style.ItemSpacing.x, style.ItemSpacing.y));
+        }
+        ~ScopedStyleCompact() { ImGui::PopStyleVar(2); }
+    };
+
+    struct IMGUI_API ScopedFont
+    {
+        ScopedFont(const ScopedFont&) = delete;
+        ScopedFont operator=(const ScopedFont&) = delete;
+        ScopedFont(ImFont* font) { ImGui::PushFont(font); }
+        ~ScopedFont() { ImGui::PopFont(); }
+    };
+
+    struct IMGUI_API ScopedDisabled
+    {
+        ScopedDisabled(const ScopedDisabled&) = delete;
+        ScopedDisabled operator=(const ScopedDisabled&) = delete;
+        ScopedDisabled(bool b) { ImGui::BeginDisabled(b); }
+        ~ScopedDisabled() { ImGui::EndDisabled(); }
+    };
+
+    struct IMGUI_API ScopedID
+    {
+        ScopedID(const ScopedID&) = delete;
+        ScopedID operator=(const ScopedID&) = delete;
+        template<typename T>
+        ScopedID(T id) { ImGui::PushID(id); }
+        ~ScopedID() { ImGui::PopID(); }
+    };
+
+    struct IMGUI_API ScopedItemFlags
+    {
+        ScopedItemFlags(const ScopedItemFlags&) = delete;
+        ScopedItemFlags operator=(const ScopedItemFlags&) = delete;
+        ScopedItemFlags(const ImGuiItemFlags flags, const bool enable = true) { ImGui::PushItemFlag(flags, enable); }
+        ~ScopedItemFlags() { ImGui::PopItemFlag(); }
+    };
+
+    struct IMGUI_API ScopedItemWidth
+    {
+        ScopedItemWidth(const ScopedItemWidth&) = delete;
+        ScopedItemWidth operator=(const ScopedItemWidth&) = delete;
+        ScopedItemWidth(float value) { ImGui::PushItemWidth(value); }
+        ~ScopedItemWidth() { ImGui::PopItemWidth(); }
+    };
+
+    struct IMGUI_API ScopedFontSize
+    {
+        float originalFontScale;
+
+        ScopedFontSize(const ScopedFontSize&) = delete;
+        ScopedFontSize operator=(const ScopedFontSize&) = delete;
+        ScopedFontSize(float value) { originalFontScale = ImGui::GetIO().FontGlobalScale; ImGui::SetWindowFontScale(value); }
+        ~ScopedFontSize() { ImGui::SetWindowFontScale(originalFontScale); }
+    };
 }
 
 export {
