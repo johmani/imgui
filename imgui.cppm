@@ -692,6 +692,47 @@ export namespace ImGui {
         return 0;
     }
 
+    IMGUI_API bool TextButton(const char* label, const ImVec2& size_arg = ImVec2(0, 0))
+    {
+        ImGuiButtonFlags flags = ImGuiButtonFlags_None;
+        ImGuiWindow* window = GetCurrentWindow();
+        if (window->SkipItems)
+            return false;
+
+        ImGuiContext& g = *GImGui;
+        const ImGuiStyle& style = g.Style;
+        const ImGuiID id = window->GetID(label);
+        const ImVec2 label_size = CalcTextSize(label, NULL, true);
+
+        ImVec2 pos = window->DC.CursorPos;
+        if ((flags & ImGuiButtonFlags_AlignTextBaseLine) && style.FramePadding.y < window->DC.CurrLineTextBaseOffset) // Try to vertically align buttons that are smaller/have no padding so that text baseline matches (bit hacky, since it shouldn't be a flag)
+            pos.y += window->DC.CurrLineTextBaseOffset - style.FramePadding.y;
+        ImVec2 size = CalcItemSize(size_arg, label_size.x + style.FramePadding.x * 2.0f, label_size.y + style.FramePadding.y * 2.0f);
+
+        const ImRect bb(pos, pos + size);
+        ItemSize(size, style.FramePadding.y);
+        if (!ItemAdd(bb, id))
+            return false;
+
+        bool hovered, held;
+        bool pressed = ButtonBehavior(bb, id, &hovered, &held, flags);
+
+        // Render
+        const ImVec4 col = GetStyleColorVec4((held && hovered) ? ImGuiCol_ButtonActive : hovered ? ImGuiCol_ButtonHovered : ImGuiCol_Text);
+        RenderNavCursor(bb, id);
+        RenderFrame(bb.Min, bb.Max, 0x00000000, true, style.FrameRounding);
+
+        if (g.LogEnabled)
+            LogSetNextTextDecoration("[", "]");
+
+        PushStyleColor(ImGuiCol_Text, col);
+        RenderTextClipped(bb.Min + style.FramePadding, bb.Max - style.FramePadding, label, NULL, &label_size, style.ButtonTextAlign, &bb);
+        PopStyleColor();
+
+        IMGUI_TEST_ENGINE_ITEM_INFO(id, label, g.LastItemData.StatusFlags);
+        return pressed;
+    }
+
     IMGUI_API bool  InputText(const char* label, std::string* str, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = nullptr, void* user_data = nullptr)
     {
         IM_ASSERT((flags & ImGuiInputTextFlags_CallbackResize) == 0);
