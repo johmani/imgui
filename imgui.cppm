@@ -558,42 +558,42 @@ export {
 	using ::ImVec2;
 	using ::ImVec4;
 
-	using ::ImGuiWindowFlags_;
-	using ::ImGuiChildFlags_;
-	using ::ImGuiItemFlags_;
-	using ::ImGuiInputTextFlags_;
-	using ::ImGuiTreeNodeFlags_;
-	using ::ImGuiPopupFlags_;
-	using ::ImGuiSelectableFlags_;
-	using ::ImGuiComboFlags_;
-	using ::ImGuiTabBarFlags_;
-	using ::ImGuiTabItemFlags_;
-	using ::ImGuiFocusedFlags_;
-	using ::ImGuiHoveredFlags_;
-	using ::ImGuiDockNodeFlags_;
-	using ::ImGuiDragDropFlags_;
-	using ::ImGuiDataType_;
-	using ::ImGuiDir;
-	using ::ImGuiSortDirection;
-	using ::ImGuiKey;
-	using ::ImGuiInputFlags_;
-	using ::ImGuiConfigFlags_;
-	using ::ImGuiBackendFlags_;
-	using ::ImGuiCol_;
-	using ::ImGuiStyleVar_;
-	using ::ImGuiButtonFlags_;
-	using ::ImGuiColorEditFlags_;
-	using ::ImGuiSliderFlags_;
-	using ::ImGuiMouseButton_;
-	using ::ImGuiMouseCursor_;
-	using ::ImGuiMouseSource;
-	using ::ImGuiCond_;
-	using ::ImGuiTableFlags_;
-	using ::ImGuiTableColumnFlags_;
-	using ::ImGuiTableRowFlags_;
-	using ::ImGuiTableBgTarget_;
-	using ::ImGuiTableSortSpecs;
-	using ::ImGuiTableColumnSortSpecs;
+    enum ImGuiWindowFlags_;
+    enum ImGuiChildFlags_;
+    enum ImGuiItemFlags_;
+    enum ImGuiInputTextFlags_;
+    enum ImGuiTreeNodeFlags_;
+    enum ImGuiPopupFlags_;
+    enum ImGuiSelectableFlags_;
+    enum ImGuiComboFlags_;
+    enum ImGuiTabBarFlags_;
+    enum ImGuiTabItemFlags_;
+    enum ImGuiFocusedFlags_;
+    enum ImGuiHoveredFlags_;
+    enum ImGuiDockNodeFlags_;
+    enum ImGuiDragDropFlags_;
+    enum ImGuiDataType_;
+    enum ImGuiDir;
+    enum ImGuiSortDirection : ImU8;
+    enum ImGuiKey;
+    enum ImGuiInputFlags_;
+    enum ImGuiConfigFlags_;
+    enum ImGuiBackendFlags_;
+    enum ImGuiCol_;
+    enum ImGuiStyleVar_;
+    enum ImGuiButtonFlags_;
+    enum ImGuiColorEditFlags_;
+    enum ImGuiSliderFlags_;
+    enum ImGuiMouseButton_;
+    enum ImGuiMouseCursor_;
+    enum ImGuiMouseSource;
+    enum ImGuiCond_;
+    enum ImGuiTableFlags_;
+    enum ImGuiTableColumnFlags_;
+    enum ImGuiTableRowFlags_;
+    enum ImGuiTableBgTarget_;
+    using ::ImGuiTableSortSpecs;
+    using ::ImGuiTableColumnSortSpecs;
 
 	using ::ImVector;
 	using ::ImGuiStyle;
@@ -622,7 +622,7 @@ export {
 	using ::operator/=;
 
 	using ::ImColor;
-	using ::ImGuiMultiSelectFlags_;
+    enum ImGuiMultiSelectFlags_;
 	using ::ImGuiMultiSelectIO;
 	using ::ImGuiSelectionRequestType;
 	using ::ImGuiSelectionRequest;
@@ -634,18 +634,18 @@ export {
 	using ::ImDrawCmdHeader;
 	using ::ImDrawChannel;
 	using ::ImDrawListSplitter;
-	using ::ImDrawFlags_;
-	using ::ImDrawListFlags_;
+    enum ImDrawFlags_;
+    enum ImDrawListFlags_;
 	using ::ImDrawList;
 	using ::ImDrawData;
 	using ::ImFontConfig;
 	using ::ImFontGlyph;
 	using ::ImFontGlyphRangesBuilder;
 	using ::ImFontAtlasCustomRect;
-	using ::ImFontAtlasFlags_;
+    enum ImFontAtlasFlags_;
 	using ::ImFontAtlas;
 	using ::ImFont;
-	using ::ImGuiViewportFlags_;
+    enum ImGuiViewportFlags_;
 	using ::ImGuiViewport;
 
 	using ::ImGuiPlatformIO;
@@ -804,20 +804,20 @@ export namespace ImGui {
         return false;
     }
 
-    IMGUI_API void ShiftCursorX(float distance)
+    IMGUI_API void ShiftCursorX(float offset)
     {
-        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + distance);
+        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + offset);
     }
 
-    IMGUI_API void ShiftCursorY(float distance)
+    IMGUI_API void ShiftCursorY(float offset)
     {
-        ImGui::SetCursorPosY(ImGui::GetCursorPosY() + distance);
+        ImGui::SetCursorPosY(ImGui::GetCursorPosY() + offset);
     }
 
-    IMGUI_API void ShiftCursor(float x, float y)
+    IMGUI_API void ShiftCursor(ImVec2 offset)
     {
         const ImVec2 cursor = ImGui::GetCursorPos();
-        ImGui::SetCursorPos(ImVec2(cursor.x + x, cursor.y + y));
+        ImGui::SetCursorPos(ImVec2(cursor.x, cursor.y) + offset);
     }
 
     struct IMGUI_API ScopedButtonColor
