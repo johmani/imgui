@@ -711,6 +711,8 @@ export namespace ImGui {
         if (window->SkipItems)
             return false;
 
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(1, 1));
+
         ImGuiContext& g = *GImGui;
         const ImGuiStyle& style = g.Style;
         const ImGuiID id = window->GetID(label);
@@ -723,23 +725,32 @@ export namespace ImGui {
 
         const ImRect bb(pos, pos + size);
         ItemSize(size, style.FramePadding.y);
+        
         if (!ItemAdd(bb, id))
+        {
+            ImGui::PopStyleVar();
             return false;
+        }
 
         bool hovered, held;
         bool pressed = ButtonBehavior(bb, id, &hovered, &held, flags);
 
+        if (ImGui::IsItemHovered())
+            ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+
         // Render
-        const ImVec4 col = GetStyleColorVec4((held && hovered) ? ImGuiCol_ButtonActive : hovered ? ImGuiCol_ButtonHovered : ImGuiCol_Text);
         RenderNavCursor(bb, id);
         RenderFrame(bb.Min, bb.Max, 0x00000000, true, style.FrameRounding);
 
         if (g.LogEnabled)
             LogSetNextTextDecoration("[", "]");
 
+        const ImVec4 col = GetStyleColorVec4((held && hovered) ? ImGuiCol_ButtonActive : hovered ? ImGuiCol_ButtonHovered : ImGuiCol_Text);
         PushStyleColor(ImGuiCol_Text, col);
         RenderTextClipped(bb.Min + style.FramePadding, bb.Max - style.FramePadding, label, NULL, &label_size, style.ButtonTextAlign, &bb);
         PopStyleColor();
+
+        ImGui::PopStyleVar();
 
         IMGUI_TEST_ENGINE_ITEM_INFO(id, label, g.LastItemData.StatusFlags);
         return pressed;
@@ -814,6 +825,17 @@ export namespace ImGui {
         ImGui::PopStyleColor(2);
 
         return false;
+    }
+
+    IMGUI_API void ToolTip(const char* fmt, ...)
+    {
+        if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary | ImGuiHoveredFlags_ForTooltip))
+        {
+            va_list args;
+            va_start(args, fmt);
+            SetTooltipV(fmt, args);
+            va_end(args);
+        }
     }
 
     IMGUI_API void ShiftCursorX(float offset)
