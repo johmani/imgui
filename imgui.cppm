@@ -792,7 +792,7 @@ export namespace ImGui {
         return InputTextWithHint(label, hint, (char*)str->c_str(), str->capacity() + 1, flags, InputTextCallback, &cb_user_data);
     }
 
-    IMGUI_API bool SelectabelButton(const char* label, const ImVec2& size, bool selected = false)
+    IMGUI_API bool SelectableButton(const char* label, const ImVec2& size, bool selected = false)
     {
         auto& colors = ImGui::GetStyle().Colors;
 
