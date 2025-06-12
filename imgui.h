@@ -2974,6 +2974,7 @@ inline bool    operator==(const ImVec4& lhs, const ImVec4& rhs)  { return lhs.x 
 inline bool    operator!=(const ImVec4& lhs, const ImVec4& rhs)  { return lhs.x != rhs.x || lhs.y != rhs.y || lhs.z != rhs.z || lhs.w != rhs.w; }
 IM_MSVC_RUNTIME_CHECKS_RESTORE
 #endif
+
 // Helpers macros to generate 32-bit encoded colors
 // - User can declare their own format by #defining the 5 _SHIFT/_MASK macros in their imconfig file.
 // - Any setting other than the default will need custom backend support. The only standard backend that supports anything else than the default is DirectX9.

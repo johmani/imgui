@@ -82,6 +82,8 @@ export namespace ImGui {
 
     using ImGui::PushFont;
     using ImGui::PopFont;
+    using ImGui::PushFontSize;
+    using ImGui::PopFontSize;
     using ImGui::PushStyleColor;
     using ImGui::PopStyleColor;
     using ImGui::PushStyleVar;
@@ -430,7 +432,7 @@ export namespace ImGui {
     using ImGui::DebugFlashStyleColor;
     using ImGui::DebugStartItemPicker;
     using ImGui::DebugCheckVersionAndDataLayout;
-    
+
 #ifndef IMGUI_DISABLE_DEBUG_TOOLS
     using ImGui::DebugLog;
     using ImGui::DebugLogV;
@@ -470,10 +472,15 @@ export {
     using ::ImDrawVert;
     using ::ImFont;
     using ::ImFontAtlas;
-    using ::ImFontBuilderIO;
+    using ::ImFontAtlasBuilder;
+    using ::ImFontAtlasRect;
+    using ::ImFontBaked;
     using ::ImFontConfig;
     using ::ImFontGlyph;
     using ::ImFontGlyphRangesBuilder;
+    using ::ImFontLoader;
+    using ::ImTextureData;
+    using ::ImTextureRect;
     using ::ImColor;
     using ::ImGuiContext;
     using ::ImGuiIO;
@@ -515,6 +522,7 @@ export {
 
     using ::ImDrawFlags;
     using ::ImDrawListFlags;
+    using ::ImFontFlags;
     using ::ImFontAtlasFlags;
     using ::ImGuiBackendFlags;
     using ::ImGuiButtonFlags;
@@ -557,6 +565,7 @@ export {
     using ::ImGuiSelectionUserData;
     using ::ImVec2;
     using ::ImVec4;
+    using ::ImTextureRef;
 
     enum ImGuiWindowFlags_;
     enum ImGuiChildFlags_;
@@ -648,10 +657,10 @@ export {
     enum ImGuiViewportFlags_;
     using ::ImGuiViewport;
 
-    using ::ImGuiPlatformIO;
-    using ::ImGuiPlatformMonitor;
-    using ::ImGuiPlatformImeData;
-    using ::ImGuiPlatformMonitor;
+    using ::ImTextureFormat;
+    using ::ImTextureStatus;
+    using ::ImTextureRect;
+    using ::ImTextureData;
 
     // imgui_internal.h
     using ::ImGuiContext;
@@ -890,7 +899,8 @@ export namespace ImGui {
     {
         ScopedFont(const ScopedFont&) = delete;
         ScopedFont operator=(const ScopedFont&) = delete;
-        ScopedFont(ImFont* font) { ImGui::PushFont(font); }
+        ScopedFont(ImFont* font, float size = -1) { ImGui::PushFont(font, size * ImGui::GetWindowDpiScale()); }
+        ScopedFont(int index, float size = -1) { ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[index], size * ImGui::GetWindowDpiScale()); }
         ~ScopedFont() { ImGui::PopFont(); }
     };
 
@@ -929,12 +939,10 @@ export namespace ImGui {
 
     struct IMGUI_API ScopedFontSize
     {
-        float originalFontScale;
-
         ScopedFontSize(const ScopedFontSize&) = delete;
         ScopedFontSize operator=(const ScopedFontSize&) = delete;
-        ScopedFontSize(float value) { originalFontScale = ImGui::GetIO().FontGlobalScale; ImGui::SetWindowFontScale(value); }
-        ~ScopedFontSize() { ImGui::SetWindowFontScale(originalFontScale); }
+        ScopedFontSize(float size) { ImGui::PushFontSize(size); }
+        ~ScopedFontSize() { ImGui::PopFontSize(); }
     };
 }
 
