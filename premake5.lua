@@ -15,9 +15,9 @@ project "imgui"
 		"*.lua",
 	}
 
-    includedirs
-    {
-        
+    removefiles{
+
+        "imgui_demo.cpp",
     }
 
 	filter "system:windows"
