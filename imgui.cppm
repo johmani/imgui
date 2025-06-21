@@ -4,6 +4,7 @@ module;
 #include <string>
 #include "imgui.h"
 #include "imgui_internal.h"
+#include "ImExtensions/ImGuizmo.h"
 
 export module ImGui;
 
@@ -1011,6 +1012,45 @@ export namespace ImGui {
             }
         }
     };
+}
+
+export namespace ImGuizmo {
+
+    using ImGuizmo::ViewAxisWidget;
+    using ImGuizmo::SetDrawlist;
+    using ImGuizmo::BeginFrame;
+    using ImGuizmo::SetImGuiContext;
+    using ImGuizmo::IsOver;
+    using ImGuizmo::IsUsing;
+    using ImGuizmo::IsUsingViewManipulate;
+    using ImGuizmo::IsViewManipulateHovered;
+    using ImGuizmo::IsUsingAny;
+    using ImGuizmo::Enable;
+    using ImGuizmo::DecomposeMatrixToComponents;
+    using ImGuizmo::RecomposeMatrixFromComponents;
+    using ImGuizmo::SetRect;
+    using ImGuizmo::SetOrthographic;
+    using ImGuizmo::DrawCubes;
+    using ImGuizmo::DrawGrid;
+    enum ImGuizmo::OPERATION;
+    enum ImGuizmo::MODE;
+    using ImGuizmo::Manipulate;
+    using ImGuizmo::ViewManipulate;
+    using ImGuizmo::SetAlternativeWindow;
+    using ImGuizmo::PushID;
+    using ImGuizmo::PopID;
+    using ImGuizmo::PopID;
+    using ImGuizmo::GetID;
+    using ImGuizmo::IsOver;
+    using ImGuizmo::SetGizmoSizeClipSpace;
+    using ImGuizmo::AllowAxisFlip;
+    using ImGuizmo::SetAxisLimit;
+    using ImGuizmo::SetAxisMask;
+    using ImGuizmo::SetPlaneLimit;
+    using ImGuizmo::IsOver;
+    enum ImGuizmo::COLOR;
+    using ImGuizmo::Style;
+    using ImGuizmo::GetStyle;
 }
 
 export {
