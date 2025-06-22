@@ -7,8 +7,8 @@ project "imgui"
     targetdir (binOutputDir)
     objdir (IntermediatesOutputDir)
 
-    files
-    {
+    files {
+
         "*.h",
         "*.cpp",
         "*.cppm",
@@ -17,6 +17,10 @@ project "imgui"
         "ImExtensions/*.cpp",
 
         "*.lua",
+    }
+
+    includedirs {
+        "."
     }
 
     removefiles{

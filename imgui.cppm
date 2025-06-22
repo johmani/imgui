@@ -5,6 +5,7 @@ module;
 #include "imgui.h"
 #include "imgui_internal.h"
 #include "ImExtensions/ImGuizmo.h"
+#include "ImExtensions/ImExtra.h"
 
 export module ImGui;
 
@@ -669,350 +670,71 @@ export {
 
 
 //////////////////////////////////////////////////////////////////////////
-// extra
+// ImExtra
 //////////////////////////////////////////////////////////////////////////
 
 export namespace ImGui {
 
-    struct InputTextCallback_UserData
-    {
-        std::string* Str;
-        ImGuiInputTextCallback  ChainCallback;
-        void* ChainCallbackUserData;
-    };
+    using ImGui::TextButton;
+    using ImGui::SelectableButton;
+    using ImGui::ToolTip;
+    using ImGui::ShiftCursorX;
+    using ImGui::ShiftCursorY;
+    using ImGui::ShiftCursor;
 
-    int InputTextCallback(ImGuiInputTextCallbackData* data)
-    {
-        InputTextCallback_UserData* user_data = (InputTextCallback_UserData*)data->UserData;
-        if (data->EventFlag == ImGuiInputTextFlags_CallbackResize)
-        {
-            // Resize string callback
-            // If for some reason we refuse the new length (BufTextLen) and/or capacity (BufSize) we need to set them back to what we want.
-            std::string* str = user_data->Str;
-            IM_ASSERT(data->Buf == str->c_str());
-            str->resize(data->BufTextLen);
-            data->Buf = (char*)str->c_str();
-        }
-        else if (user_data->ChainCallback)
-        {
-            // Forward to user callback, if any
-            data->UserData = user_data->ChainCallbackUserData;
-            return user_data->ChainCallback(data);
-        }
-        return 0;
-    }
-
-    IMGUI_API bool TextButton(const char* label, const ImVec2& size_arg = ImVec2(0, 0))
-    {
-        ImGuiButtonFlags flags = ImGuiButtonFlags_None;
-        ImGuiWindow* window = GetCurrentWindow();
-        if (window->SkipItems)
-            return false;
-
-        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(1, 1));
-
-        ImGuiContext& g = *GImGui;
-        const ImGuiStyle& style = g.Style;
-        const ImGuiID id = window->GetID(label);
-        const ImVec2 label_size = CalcTextSize(label, NULL, true);
-
-        ImVec2 pos = window->DC.CursorPos;
-        if ((flags & ImGuiButtonFlags_AlignTextBaseLine) && style.FramePadding.y < window->DC.CurrLineTextBaseOffset) // Try to vertically align buttons that are smaller/have no padding so that text baseline matches (bit hacky, since it shouldn't be a flag)
-            pos.y += window->DC.CurrLineTextBaseOffset - style.FramePadding.y;
-        ImVec2 size = CalcItemSize(size_arg, label_size.x + style.FramePadding.x * 2.0f, label_size.y + style.FramePadding.y * 2.0f);
-
-        const ImRect bb(pos, pos + size);
-        ItemSize(size, style.FramePadding.y);
-        
-        if (!ItemAdd(bb, id))
-        {
-            ImGui::PopStyleVar();
-            return false;
-        }
-
-        bool hovered, held;
-        bool pressed = ButtonBehavior(bb, id, &hovered, &held, flags);
-
-        if (ImGui::IsItemHovered())
-            ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
-
-        // Render
-        RenderNavCursor(bb, id);
-        RenderFrame(bb.Min, bb.Max, 0x00000000, true, style.FrameRounding);
-
-        if (g.LogEnabled)
-            LogSetNextTextDecoration("[", "]");
-
-        const ImVec4 col = GetStyleColorVec4((held && hovered) ? ImGuiCol_ButtonActive : hovered ? ImGuiCol_ButtonHovered : ImGuiCol_Text);
-        PushStyleColor(ImGuiCol_Text, col);
-        RenderTextClipped(bb.Min + style.FramePadding, bb.Max - style.FramePadding, label, NULL, &label_size, style.ButtonTextAlign, &bb);
-        PopStyleColor();
-
-        ImGui::PopStyleVar();
-
-        IMGUI_TEST_ENGINE_ITEM_INFO(id, label, g.LastItemData.StatusFlags);
-        return pressed;
-    }
-
-    IMGUI_API bool InputText(const char* label, std::string* str, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = nullptr, void* user_data = nullptr)
-    {
-        IM_ASSERT((flags & ImGuiInputTextFlags_CallbackResize) == 0);
-        flags |= ImGuiInputTextFlags_CallbackResize;
-
-        InputTextCallback_UserData cb_user_data;
-        cb_user_data.Str = str;
-        cb_user_data.ChainCallback = callback;
-        cb_user_data.ChainCallbackUserData = user_data;
-        return InputText(label, (char*)str->c_str(), str->capacity() + 1, flags, InputTextCallback, &cb_user_data);
-    }
-
-    IMGUI_API bool InputTextMultiline(const char* label, std::string* str, const ImVec2& size = ImVec2(0, 0), ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = nullptr, void* user_data = nullptr)
-    {
-        IM_ASSERT((flags & ImGuiInputTextFlags_CallbackResize) == 0);
-        flags |= ImGuiInputTextFlags_CallbackResize;
-
-        InputTextCallback_UserData cb_user_data;
-        cb_user_data.Str = str;
-        cb_user_data.ChainCallback = callback;
-        cb_user_data.ChainCallbackUserData = user_data;
-        return InputTextMultiline(label, (char*)str->c_str(), str->capacity() + 1, size, flags, InputTextCallback, &cb_user_data);
-    }
-
-    IMGUI_API bool InputTextWithHint(const char* label, const char* hint, std::string* str, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = nullptr, void* user_data = nullptr)
-    {
-        IM_ASSERT((flags & ImGuiInputTextFlags_CallbackResize) == 0);
-        flags |= ImGuiInputTextFlags_CallbackResize;
-
-        InputTextCallback_UserData cb_user_data;
-        cb_user_data.Str = str;
-        cb_user_data.ChainCallback = callback;
-        cb_user_data.ChainCallbackUserData = user_data;
-        return InputTextWithHint(label, hint, (char*)str->c_str(), str->capacity() + 1, flags, InputTextCallback, &cb_user_data);
-    }
-
-    IMGUI_API bool SelectableButton(const char* label, const ImVec2& size, bool selected = false)
-    {
-        auto& colors = ImGui::GetStyle().Colors;
-
-        if (selected)
-        {
-            ImGui::PushStyleColor(ImGuiCol_Button, colors[ImGuiCol_ButtonActive]);
-            ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]);
-        }
-
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, colors[ImGuiCol_ButtonActive] - ImVec4(0,0,0,0.1f));
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive, colors[ImGuiCol_ButtonActive]);
-
-        if (ImGui::Button(label, size))
-        {
-            if (selected)
-            {
-                ImGui::PopStyleColor();
-                ImGui::PopFont();
-            }
-            ImGui::PopStyleColor(2);
-
-            return true;
-        }
-
-        if (selected)
-        {
-            ImGui::PopStyleColor();
-            ImGui::PopFont();
-        }
-        ImGui::PopStyleColor(2);
-
-        return false;
-    }
-
-    IMGUI_API void ToolTip(const char* fmt, ...)
-    {
-        if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary | ImGuiHoveredFlags_ForTooltip))
-        {
-            va_list args;
-            va_start(args, fmt);
-            SetTooltipV(fmt, args);
-            va_end(args);
-        }
-    }
-
-    IMGUI_API void ShiftCursorX(float offset)
-    {
-        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + offset);
-    }
-
-    IMGUI_API void ShiftCursorY(float offset)
-    {
-        ImGui::SetCursorPosY(ImGui::GetCursorPosY() + offset);
-    }
-
-    IMGUI_API void ShiftCursor(ImVec2 offset)
-    {
-        const ImVec2 cursor = ImGui::GetCursorPos();
-        ImGui::SetCursorPos(ImVec2(cursor.x, cursor.y) + offset);
-    }
-
-    struct IMGUI_API ScopedButtonColor
-    {
-        ScopedButtonColor(const ScopedButtonColor&) = delete;
-        ScopedButtonColor operator=(const ScopedButtonColor&) = delete;
-        ScopedButtonColor(const ImVec4& baseColor)
-        {
-            ImGui::PushStyleColor(ImGuiCol_Button, { baseColor.x, baseColor.y, baseColor.z, 0.8f });
-            ImGui::PushStyleColor(ImGuiCol_ButtonActive, { baseColor.x, baseColor.y, baseColor.z, 0.9f });
-            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { baseColor.x, baseColor.y, baseColor.z, 1.0f });
-        }
-        ~ScopedButtonColor() { ImGui::PopStyleColor(3); }
-    };
-
-    struct IMGUI_API ScopedColor
-    {
-        ScopedColor(const ScopedColor&) = delete;
-        ScopedColor operator=(const ScopedColor&) = delete;
-        template<typename T>
-        ScopedColor(ImGuiCol ColorId, T Color) { ImGui::PushStyleColor(ColorId, Color); }
-        ~ScopedColor() { ImGui::PopStyleColor(); }
-    };
-
-    struct IMGUI_API ScopedStyle
-    {
-        ScopedStyle(const ScopedStyle&) = delete;
-        ScopedStyle operator=(const ScopedStyle&) = delete;
-        template<typename T>
-        ScopedStyle(ImGuiStyleVar styleVar, T value) { ImGui::PushStyleVar(styleVar, value); }
-        ~ScopedStyle() { ImGui::PopStyleVar(); }
-    };
-
-    struct IMGUI_API ScopedStyleCompact
-    {
-        ScopedStyleCompact(const ScopedStyleCompact&) = delete;
-        ScopedStyleCompact operator=(const ScopedStyleCompact&) = delete;
-        ScopedStyleCompact(float y)
-        {
-            ImGuiStyle& style = ImGui::GetStyle();
-            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(style.FramePadding.x, style.FramePadding.y * y));
-            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(style.ItemSpacing.x, style.ItemSpacing.y));
-        }
-        ~ScopedStyleCompact() { ImGui::PopStyleVar(2); }
-    };
-
-    struct IMGUI_API ScopedFont
-    {
-        ScopedFont(const ScopedFont&) = delete;
-        ScopedFont operator=(const ScopedFont&) = delete;
-        ScopedFont(ImFont* font, float size = -1) { ImGui::PushFont(font, size * ImGui::GetWindowDpiScale()); }
-        ScopedFont(int index, float size = -1) { ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[index], size * ImGui::GetWindowDpiScale()); }
-        ~ScopedFont() { ImGui::PopFont(); }
-    };
-
-    struct IMGUI_API ScopedDisabled
-    {
-        ScopedDisabled(const ScopedDisabled&) = delete;
-        ScopedDisabled operator=(const ScopedDisabled&) = delete;
-        ScopedDisabled(bool b) { ImGui::BeginDisabled(b); }
-        ~ScopedDisabled() { ImGui::EndDisabled(); }
-    };
-
-    struct IMGUI_API ScopedID
-    {
-        ScopedID(const ScopedID&) = delete;
-        ScopedID operator=(const ScopedID&) = delete;
-        template<typename T>
-        ScopedID(T id) { ImGui::PushID(id); }
-        ~ScopedID() { ImGui::PopID(); }
-    };
-
-    struct IMGUI_API ScopedItemFlags
-    {
-        ScopedItemFlags(const ScopedItemFlags&) = delete;
-        ScopedItemFlags operator=(const ScopedItemFlags&) = delete;
-        ScopedItemFlags(const ImGuiItemFlags flags, const bool enable = true) { ImGui::PushItemFlag(flags, enable); }
-        ~ScopedItemFlags() { ImGui::PopItemFlag(); }
-    };
-
-    struct IMGUI_API ScopedItemWidth
-    {
-        ScopedItemWidth(const ScopedItemWidth&) = delete;
-        ScopedItemWidth operator=(const ScopedItemWidth&) = delete;
-        ScopedItemWidth(float value) { ImGui::PushItemWidth(value); }
-        ~ScopedItemWidth() { ImGui::PopItemWidth(); }
-    };
-
-    struct IMGUI_API ScopedFontSize
-    {
-        ScopedFontSize(const ScopedFontSize&) = delete;
-        ScopedFontSize operator=(const ScopedFontSize&) = delete;
-        ScopedFontSize(float size) { ImGui::PushFontSize(size); }
-        ~ScopedFontSize() { ImGui::PopFontSize(); }
-    };
-
-    struct ScopedColorStack
-    {
-        int count;
-
-        ScopedColorStack(const ScopedColorStack&) = delete;
-        ScopedColorStack operator=(const ScopedColorStack&) = delete;
-
-        template <typename ColorType, typename... OtherColors>
-        ScopedColorStack(ImGuiCol firstColorID, ColorType firstColor, OtherColors&& ... otherColorPairs)
-            : count((sizeof... (otherColorPairs) / 2) + 1)
-        {
-            static_assert ((sizeof... (otherColorPairs) & 1u) == 0, "ScopedColorStack constructor expects a list of pairs of Color IDs and Colors as its arguments");
-            PushColor(firstColorID, firstColor, std::forward<OtherColors>(otherColorPairs)...);
-        }
-
-        ~ScopedColorStack() { ImGui::PopStyleColor(count); }
-
-    private:
-        template <typename ColorType, typename... OtherColors>
-        void PushColor(ImGuiCol ColorID, ColorType Color, OtherColors&& ... otherColorPairs)
-        {
-            if constexpr (sizeof... (otherColorPairs) == 0)
-            {
-                ImGui::PushStyleColor(ColorID, Color);
-            }
-            else
-            {
-                ImGui::PushStyleColor(ColorID, Color);
-                PushColor(std::forward<OtherColors>(otherColorPairs)...);
-            }
-        }
-    };
-
-    struct ScopedStyleStack
-    {
-        int count;
-
-        ScopedStyleStack(const ScopedStyleStack&) = delete;
-        ScopedStyleStack operator=(const ScopedStyleStack&) = delete;
-
-        template <typename ValueType, typename... OtherStylePairs>
-        ScopedStyleStack(ImGuiStyleVar firstStyleVar, ValueType firstValue, OtherStylePairs&& ... otherStylePairs)
-            : count((sizeof... (otherStylePairs) / 2) + 1)
-        {
-            static_assert ((sizeof... (otherStylePairs) & 1u) == 0, "ScopedStyleStack constructor expects a list of pairs of Color IDs and Colors as its arguments");
-
-            PushStyle(firstStyleVar, firstValue, std::forward<OtherStylePairs>(otherStylePairs)...);
-        }
-
-        ~ScopedStyleStack() { ImGui::PopStyleVar(count); }
-
-    private:
-        template <typename ValueType, typename... OtherStylePairs>
-        void PushStyle(ImGuiStyleVar styleVar, ValueType value, OtherStylePairs&& ... otherStylePairs)
-        {
-            if constexpr (sizeof... (otherStylePairs) == 0)
-            {
-                ImGui::PushStyleVar(styleVar, value);
-            }
-            else
-            {
-                ImGui::PushStyleVar(styleVar, value);
-                PushStyle(std::forward<OtherStylePairs>(otherStylePairs)...);
-            }
-        }
-    };
+    using ImGui::ScopedButtonColor;
+    using ImGui::ScopedColor;
+    using ImGui::ScopedStyle;
+    using ImGui::ScopedStyleCompact;
+    using ImGui::ScopedFont;
+    using ImGui::ScopedDisabled;
+    using ImGui::ScopedID;
+    using ImGui::ScopedItemFlags;
+    using ImGui::ScopedItemWidth;
+    using ImGui::ScopedFontSize;
+    using ImGui::ScopedColorStack;
+    using ImGui::ScopedStyleStack;
 }
+
+export {
+
+    using ::ImColorU32;
+    enum ImFieldDrageScalerEvent;
+}
+
+export namespace ImField {
+
+    using ImField::BeginBlock;
+    using ImField::EndBlock;
+    using ImField::Field;
+    using ImField::DragFloat;
+    using ImField::DragFloat2;
+    using ImField::DragFloat3;
+    using ImField::DragFloat4;
+    using ImField::DragInt;
+    using ImField::DragInt2;
+    using ImField::DragInt3;
+    using ImField::DragInt4;
+    using ImField::InputText;
+    using ImField::InputScalar;
+    using ImField::InputInt;
+    using ImField::InputUInt;
+    using ImField::Button;
+    using ImField::Text;
+    using ImField::Checkbox;
+    using ImField::TextUnformatted;
+    using ImField::TextLinkOpenURL;
+    using ImField::Combo;
+    using ImField::DragScalarN;
+    using ImField::DragColoredFloat;
+    using ImField::DragColoredFloat2;
+    using ImField::DragColoredFloat3;
+    using ImField::DragColoredFloat4;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// ImGuizmo
+//////////////////////////////////////////////////////////////////////////
 
 export namespace ImGuizmo {
 
@@ -1051,15 +773,4 @@ export namespace ImGuizmo {
     enum ImGuizmo::COLOR;
     using ImGuizmo::Style;
     using ImGuizmo::GetStyle;
-}
-
-export {
-
-    inline constexpr uint32_t ImColor32(int R, int G, int B, int A) noexcept
-    {
-        return (static_cast<ImU32>(A) << IM_COL32_A_SHIFT) |
-            (static_cast<ImU32>(B) << IM_COL32_B_SHIFT) |
-            (static_cast<ImU32>(G) << IM_COL32_G_SHIFT) |
-            (static_cast<ImU32>(R) << IM_COL32_R_SHIFT);
-    }
 }
