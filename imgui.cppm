@@ -730,6 +730,9 @@ export namespace ImField {
     using ImField::DragColoredFloat2;
     using ImField::DragColoredFloat3;
     using ImField::DragColoredFloat4;
+    using ImField::ColorEdit3;
+    using ImField::ColorEdit4;
+    using ImField::SeparatorText;
 }
 
 //////////////////////////////////////////////////////////////////////////

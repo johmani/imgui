@@ -243,6 +243,11 @@ namespace ImField {
 
     IMGUI_API void TextLinkOpenURL(const char* label, const char* url);
 
+    IMGUI_API bool ColorEdit3(const char* label, float col[3], ImGuiColorEditFlags flags = 0);
+    IMGUI_API bool ColorEdit4(const char* label, float col[4], ImGuiColorEditFlags flags = 0);
+
+    IMGUI_API void SeparatorText(const char* text);
+
     template<uint32_t N>
     IMGUI_API bool Combo(const char* label, const std::array<std::string_view, N>& arr, std::string_view current, int& selectedIndex)
     {

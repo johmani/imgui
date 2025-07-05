@@ -458,3 +458,21 @@ void ImField::TextLinkOpenURL(const char* label, const char* url)
     Field(label);
     ImGui::TextLinkOpenURL(url, url);
 }
+
+bool ImField::ColorEdit3(const char* label, float col[3], ImGuiColorEditFlags flags)
+{
+    Field(label);
+    return ImGui::ColorEdit3(label, col, flags);
+}
+
+bool ImField::ColorEdit4(const char* label, float col[4], ImGuiColorEditFlags flags)
+{
+    Field(label);
+    return ImGui::ColorEdit4(label, col, flags);
+}
+
+void ImField::SeparatorText(const char* text)
+{
+    ImField::Field(text);
+    ImGui::SeparatorText("");
+}
