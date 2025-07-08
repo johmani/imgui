@@ -431,6 +431,17 @@ bool ImField::Button(const char* label, const char* buttonLabel, const ImVec2& s
     return ImGui::Button(buttonLabel, size_arge);
 }
 
+bool ImField::ImageButton(const char* str_id, ImTextureRef tex_ref, const ImVec2& image_size, const ImVec2& uv0, const ImVec2& uv1, const ImVec4& bg_col, const ImVec4& tint_col)
+{
+    ImGuiContext& g = *GImGui;
+    ImGuiWindow* window = g.CurrentWindow;
+    if (window->SkipItems)
+        return false;
+
+    ImField::Field(str_id);
+    return ImGui::ImageButtonEx(window->GetID(str_id), tex_ref, image_size, uv0, uv1, bg_col, tint_col);
+}
+
 void ImField::Text(const char* label, const char* fmt, ...)
 {
     Field(label);
@@ -475,4 +486,13 @@ void ImField::SeparatorText(const char* text)
 {
     ImField::Field(text);
     ImGui::SeparatorText("");
+}
+
+void ImField::Separator()
+{
+    ImGui::TableNextRow();
+    ImGui::TableNextColumn();
+    ImGui::Separator();
+    ImGui::TableNextColumn();
+    ImGui::Separator();
 }

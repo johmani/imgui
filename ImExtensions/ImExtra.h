@@ -234,6 +234,7 @@ namespace ImField {
     IMGUI_API bool InputUInt(const char* label, uint32_t* v, int step = 1, int step_fast = 100, ImGuiInputTextFlags flags = 0);
 
     IMGUI_API bool Button(const char* label, const char* buttonLabel, const ImVec2& size_arge = ImVec2(-1, 0));
+    IMGUI_API bool ImageButton(const char* str_id, ImTextureRef tex_ref, const ImVec2& image_size, const ImVec2& uv0 = ImVec2(0, 0), const ImVec2& uv1 = ImVec2(1, 1), const ImVec4& bg_col = ImVec4(0, 0, 0, 0), const ImVec4& tint_col = ImVec4(1, 1, 1, 1));
 
     IMGUI_API void Text(const char* label, const char* fmt, ...);
 
@@ -247,6 +248,7 @@ namespace ImField {
     IMGUI_API bool ColorEdit4(const char* label, float col[4], ImGuiColorEditFlags flags = 0);
 
     IMGUI_API void SeparatorText(const char* text);
+    IMGUI_API void Separator();
 
     template<uint32_t N>
     IMGUI_API bool Combo(const char* label, const std::array<std::string_view, N>& arr, std::string_view current, int& selectedIndex)

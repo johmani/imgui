@@ -733,6 +733,8 @@ export namespace ImField {
     using ImField::ColorEdit3;
     using ImField::ColorEdit4;
     using ImField::SeparatorText;
+    using ImField::Separator;
+    using ImField::ImageButton;
 }
 
 //////////////////////////////////////////////////////////////////////////
