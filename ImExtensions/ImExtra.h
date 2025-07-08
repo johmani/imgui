@@ -204,33 +204,30 @@ enum ImFieldDrageScalerEvent
 namespace ImField {
 
     IMGUI_API bool BeginBlock(const char* label, const char* icon = nullptr, ImVec4 iconColor = {});
-
     IMGUI_API void EndBlock();
 
     IMGUI_API void Field(const char* name, float offsetX = 8.0f);
 
     IMGUI_API bool DragFloat(const char* label, float* v, float v_speed = 1.0f, float v_min = 0.0f, float v_max = 0.0f, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
-
     IMGUI_API bool DragFloat2(const char* label, float v[2], float v_speed = 1.0f, float v_min = 0.0f, float v_max = 0.0f, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
-
     IMGUI_API bool DragFloat3(const char* label, float v[3], float v_speed = 1.0f, float v_min = 0.0f, float v_max = 0.0f, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
-
     IMGUI_API bool DragFloat4(const char* label, float v[4], float v_speed = 1.0f, float v_min = 0.0f, float v_max = 0.0f, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
 
+    IMGUI_API ImFieldDrageScalerEvent DragScalarN(const char* label, ImGuiDataType data_type, void* p_data, int components, float v_speed, const void* p_min, const void* p_max, const char* format, ImGuiSliderFlags flags);
+    IMGUI_API ImFieldDrageScalerEvent DragColoredFloat(const char* label, float v[1], float v_speed = 1.0f, float v_min = 0.0f, float v_max = 0.0f, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
+    IMGUI_API ImFieldDrageScalerEvent DragColoredFloat2(const char* label, float v[2], float v_speed = 1.0f, float v_min = 0.0f, float v_max = 0.0f, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
+    IMGUI_API ImFieldDrageScalerEvent DragColoredFloat3(const char* label, float v[3], float v_speed = 1.0f, float v_min = 0.0f, float v_max = 0.0f, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
+    IMGUI_API ImFieldDrageScalerEvent DragColoredFloat4(const char* label, float v[4], float v_speed = 1.0f, float v_min = 0.0f, float v_max = 0.0f, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
+
     IMGUI_API bool DragInt(const char* label, int* v, float v_speed = 1.0f, int v_min = 0, int v_max = 0, const char* format = "%d", ImGuiSliderFlags flags = 0);
-
     IMGUI_API bool DragInt2(const char* label, int v[2], float v_speed = 1.0f, int v_min = 0, int v_max = 0, const char* format = "%d", ImGuiSliderFlags flags = 0);
-
     IMGUI_API bool DragInt3(const char* label, int v[3], float v_speed = 1.0f, int v_min = 0, int v_max = 0, const char* format = "%d", ImGuiSliderFlags flags = 0);
-
     IMGUI_API bool DragInt4(const char* label, int v[4], float v_speed = 1.0f, int v_min = 0, int v_max = 0, const char* format = "%d", ImGuiSliderFlags flags = 0);
 
     IMGUI_API bool InputText(const char* label, std::string* str, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = nullptr, void* user_data = nullptr);
 
     IMGUI_API bool InputScalar(const char* label, void* p_data, int flags);
-
     IMGUI_API bool InputInt(const char* label, int* v, int step = 1, int step_fast = 100, ImGuiInputTextFlags flags = 0);
-
     IMGUI_API bool InputUInt(const char* label, uint32_t* v, int step = 1, int step_fast = 100, ImGuiInputTextFlags flags = 0);
 
     IMGUI_API bool Button(const char* label, const char* buttonLabel, const ImVec2& size_arge = ImVec2(-1, 0));
@@ -274,14 +271,4 @@ namespace ImField {
         }
         return res;
     }
-
-    IMGUI_API ImFieldDrageScalerEvent DragScalarN(const char* label, ImGuiDataType data_type, void* p_data, int components, float v_speed, const void* p_min, const void* p_max, const char* format, ImGuiSliderFlags flags);
-
-    IMGUI_API ImFieldDrageScalerEvent DragColoredFloat(const char* label, float v[1], float v_speed = 1.0f, float v_min = 0.0f, float v_max = 0.0f, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
-
-    IMGUI_API ImFieldDrageScalerEvent DragColoredFloat2(const char* label, float v[2], float v_speed = 1.0f, float v_min = 0.0f, float v_max = 0.0f, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
-
-    IMGUI_API ImFieldDrageScalerEvent DragColoredFloat3(const char* label, float v[3], float v_speed = 1.0f, float v_min = 0.0f, float v_max = 0.0f, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
-
-    IMGUI_API ImFieldDrageScalerEvent DragColoredFloat4(const char* label, float v[4], float v_speed = 1.0f, float v_min = 0.0f, float v_max = 0.0f, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
 }
