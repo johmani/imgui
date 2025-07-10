@@ -1,6 +1,14 @@
 #include "imgui.h"
 #include <string>
 
+typedef int ImAutoMenuItemFlags;     // -> enum ImAutoMenuItemFlags_
+enum ImAutoMenuItemFlags_
+{
+    ImAutoMenuItemFlags_None,		  // you have to call BeginMainMenuBar/EndMainMenuBar | BeginMenuBar/EndMenuBar
+    ImAutoMenuItemFlags_MainMenuBar,
+    ImAutoMenuItemFlags_WindowMenuBar
+};
+
 inline constexpr uint32_t ImColorU32(int R, int G, int B, int A) noexcept
 {
     return (static_cast<ImU32>(A) << IM_COL32_A_SHIFT) |
@@ -28,6 +36,8 @@ namespace ImGui {
     IMGUI_API void ShiftCursorY(float offset);
 
     IMGUI_API void ShiftCursor(ImVec2 offset);
+
+    IMGUI_API bool AutoMenuItem(const char* path, ImAutoMenuItemFlags flags);
 
     struct ScopedButtonColor
     {

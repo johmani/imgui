@@ -1,6 +1,8 @@
 #include "ImExtra.h"
 #include "imgui_internal.h"
 
+#define MAX_AUTO_MENU_ITEM_TOKENS 16
+#define MAX_AUTO_MENU_ITEM_TOKEN_LENGTH 64
 
 static const ImGuiDataTypeInfo GDataTypeInfo[] =
 {
@@ -57,6 +59,88 @@ int InputTextCallback(ImGuiInputTextCallbackData* data)
     }
     return 0;
 }
+
+static bool SplitPath(const char* str, char delimiter, char outTokens[MAX_AUTO_MENU_ITEM_TOKENS][MAX_AUTO_MENU_ITEM_TOKEN_LENGTH], int& outCount)
+{
+    outCount = 0;
+    int tokenLen = 0;
+
+    if (!str)
+        return false;
+
+    while (*str && outCount < MAX_AUTO_MENU_ITEM_TOKENS)
+    {
+        if (*str == delimiter)
+        {
+            if (tokenLen > 0)
+            {
+                outTokens[outCount][tokenLen] = '\0';
+                outCount++;
+                tokenLen = 0;
+            }
+        }
+        else if (tokenLen < MAX_AUTO_MENU_ITEM_TOKEN_LENGTH - 1)
+        {
+            outTokens[outCount][tokenLen++] = *str;
+        }
+
+        str++;
+    }
+
+    if (tokenLen > 0 && outCount < MAX_AUTO_MENU_ITEM_TOKENS)
+    {
+        outTokens[outCount][tokenLen] = '\0';
+        outCount++;
+    }
+
+    return outCount > 0;
+}
+
+static bool CreateMenuLoop(char tokens[MAX_AUTO_MENU_ITEM_TOKENS][MAX_AUTO_MENU_ITEM_TOKEN_LENGTH], int tokenCount)
+{
+    for (int i = 0; i < tokenCount; i++)
+    {
+        const bool isLast = (i == tokenCount - 1);
+
+        if (isLast)
+        {
+            return ImGui::MenuItem(tokens[i]);
+        }
+        else
+        {
+            if (ImGui::BeginMenu(tokens[i]))
+            {
+                bool result = true;
+                i++;
+
+                while (i < tokenCount - 1)
+                {
+                    if (!ImGui::BeginMenu(tokens[i]))
+                    {
+                        result = false;
+                        break;
+                    }
+                    i++;
+                }
+
+                if (result && i == tokenCount - 1)
+                    result = ImGui::MenuItem(tokens[i]);
+
+                for (int j = i; j > 0; j--)
+                    ImGui::EndMenu();
+
+                return result;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+
+    return false;
+}
+
 
 bool ImGui::TextButton(const char* label, const ImVec2& size_arg)
 {
@@ -206,6 +290,43 @@ void ImGui::ShiftCursor(ImVec2 offset)
 {
     const ImVec2 cursor = ImGui::GetCursorPos();
     ImGui::SetCursorPos(ImVec2(cursor.x, cursor.y) + offset);
+}
+
+bool ImGui::AutoMenuItem(const char* path, ImAutoMenuItemFlags flags)
+{
+    if (path == nullptr || strcmp(path, "/") == 0)
+        path = "None";
+
+    char tokens[MAX_AUTO_MENU_ITEM_TOKENS][MAX_AUTO_MENU_ITEM_TOKEN_LENGTH];
+    int tokenCount = 0;
+
+    if (!SplitPath(path, '/', tokens, tokenCount))
+        return false;
+
+    bool win = false;
+
+    switch (flags)
+    {
+    case ImAutoMenuItemFlags_None:
+        win = CreateMenuLoop(tokens, tokenCount);
+        break;
+    case ImAutoMenuItemFlags_MainMenuBar:
+        if (ImGui::BeginMainMenuBar())
+        {
+            win = CreateMenuLoop(tokens, tokenCount);
+            ImGui::EndMainMenuBar();
+        }
+        break;
+    case ImAutoMenuItemFlags_WindowMenuBar:
+        if (ImGui::BeginMenuBar())
+        {
+            win = CreateMenuLoop(tokens, tokenCount);
+            ImGui::EndMenuBar();
+        }
+        break;
+    }
+
+    return win;
 }
 
 bool ImField::BeginBlock(const char* label, const char* icon, ImVec4 iconColor)

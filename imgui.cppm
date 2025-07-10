@@ -666,6 +666,9 @@ export {
 
     // imgui_internal.h
     using ::ImGuiContext;
+
+    //ImExtra.h
+    enum ImAutoMenuItemFlags_;
 }
 
 
@@ -681,6 +684,7 @@ export namespace ImGui {
     using ImGui::ShiftCursorX;
     using ImGui::ShiftCursorY;
     using ImGui::ShiftCursor;
+    using ImGui::AutoMenuItem;
 
     using ImGui::ScopedButtonColor;
     using ImGui::ScopedColor;
