@@ -22,9 +22,7 @@ namespace ImGui {
     IMGUI_API bool TextButton(const char* label, const ImVec2& size_arg = ImVec2(0, 0));
 
     IMGUI_API bool InputText(const char* label, std::string* str, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = nullptr, void* user_data = nullptr);
-
     IMGUI_API bool InputTextMultiline(const char* label, std::string* str, const ImVec2& size = ImVec2(0, 0), ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = nullptr, void* user_data = nullptr);
-
     IMGUI_API bool InputTextWithHint(const char* label, const char* hint, std::string* str, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = nullptr, void* user_data = nullptr);
 
     IMGUI_API bool SelectableButton(const char* label, const ImVec2& size, bool selected = false);
@@ -32,9 +30,7 @@ namespace ImGui {
     IMGUI_API void ToolTip(const char* fmt, ...);
 
     IMGUI_API void ShiftCursorX(float offset);
-
     IMGUI_API void ShiftCursorY(float offset);
-
     IMGUI_API void ShiftCursor(ImVec2 offset);
 
     IMGUI_API bool AutoMenuItem(const char* path, ImAutoMenuItemFlags flags);
