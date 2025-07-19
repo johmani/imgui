@@ -96,7 +96,10 @@ static bool SplitPath(const char* str, char delimiter, char outTokens[MAX_AUTO_M
     return outCount > 0;
 }
 
-static bool CreateMenuLoop(char tokens[MAX_AUTO_MENU_ITEM_TOKENS][MAX_AUTO_MENU_ITEM_TOKEN_LENGTH], int tokenCount)
+static bool CreateMenuLoop(
+    char tokens[MAX_AUTO_MENU_ITEM_TOKENS][MAX_AUTO_MENU_ITEM_TOKEN_LENGTH], int tokenCount,
+    const char* shortcut, bool selected, bool enabled
+)
 {
     for (int i = 0; i < tokenCount; i++)
     {
@@ -104,7 +107,7 @@ static bool CreateMenuLoop(char tokens[MAX_AUTO_MENU_ITEM_TOKENS][MAX_AUTO_MENU_
 
         if (isLast)
         {
-            return ImGui::MenuItem(tokens[i]);
+            return ImGui::MenuItem(tokens[i], shortcut, selected, enabled);
         }
         else
         {
@@ -124,7 +127,7 @@ static bool CreateMenuLoop(char tokens[MAX_AUTO_MENU_ITEM_TOKENS][MAX_AUTO_MENU_
                 }
 
                 if (result && i == tokenCount - 1)
-                    result = ImGui::MenuItem(tokens[i]);
+                    result = ImGui::MenuItem(tokens[i], shortcut, selected, enabled);
 
                 for (int j = i; j > 0; j--)
                     ImGui::EndMenu();
@@ -292,7 +295,7 @@ void ImGui::ShiftCursor(ImVec2 offset)
     ImGui::SetCursorPos(ImVec2(cursor.x, cursor.y) + offset);
 }
 
-bool ImGui::AutoMenuItem(const char* path, ImAutoMenuItemFlags flags)
+bool ImGui::AutoMenuItem(const char* path, const char* shortcut, bool selected, bool enabled, ImAutoMenuItemFlags flags)
 {
     if (path == nullptr || strcmp(path, "/") == 0)
         path = "None";
@@ -308,19 +311,19 @@ bool ImGui::AutoMenuItem(const char* path, ImAutoMenuItemFlags flags)
     switch (flags)
     {
     case ImAutoMenuItemFlags_None:
-        win = CreateMenuLoop(tokens, tokenCount);
+        win = CreateMenuLoop(tokens, tokenCount, shortcut, selected, enabled);
         break;
     case ImAutoMenuItemFlags_MainMenuBar:
         if (ImGui::BeginMainMenuBar())
         {
-            win = CreateMenuLoop(tokens, tokenCount);
+            win = CreateMenuLoop(tokens, tokenCount, shortcut, selected, enabled);
             ImGui::EndMainMenuBar();
         }
         break;
     case ImAutoMenuItemFlags_WindowMenuBar:
         if (ImGui::BeginMenuBar())
         {
-            win = CreateMenuLoop(tokens, tokenCount);
+            win = CreateMenuLoop(tokens, tokenCount, shortcut, selected, enabled);
             ImGui::EndMenuBar();
         }
         break;

@@ -33,7 +33,7 @@ namespace ImGui {
     IMGUI_API void ShiftCursorY(float offset);
     IMGUI_API void ShiftCursor(ImVec2 offset);
 
-    IMGUI_API bool AutoMenuItem(const char* path, ImAutoMenuItemFlags flags);
+    IMGUI_API bool AutoMenuItem(const char* path, const char* shortcut = NULL, bool selected = false, bool enabled = true, ImAutoMenuItemFlags flags = ImAutoMenuItemFlags_MainMenuBar);
 
     struct ScopedButtonColor
     {
