@@ -685,6 +685,8 @@ export namespace ImGui {
     using ImGui::ShiftCursorY;
     using ImGui::ShiftCursor;
     using ImGui::AutoMenuItem;
+    using ImGui::PushStyleCompact;
+    using ImGui::PopStyleCompact;
 
     using ImGui::ScopedButtonColor;
     using ImGui::ScopedColor;
@@ -698,6 +700,7 @@ export namespace ImGui {
     using ImGui::ScopedFontSize;
     using ImGui::ScopedColorStack;
     using ImGui::ScopedStyleStack;
+    using ImGui::ScopedCompact;
 }
 
 export {

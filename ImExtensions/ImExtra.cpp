@@ -332,6 +332,18 @@ bool ImGui::AutoMenuItem(const char* path, const char* shortcut, bool selected, 
     return win;
 }
 
+void ImGui::PushStyleCompact()
+{
+    ImGuiStyle& style = ImGui::GetStyle();
+    ImGui::PushStyleVarY(ImGuiStyleVar_FramePadding, (float)(int)(style.FramePadding.y * 0.60f));
+    ImGui::PushStyleVarY(ImGuiStyleVar_ItemSpacing, (float)(int)(style.ItemSpacing.y * 0.60f));
+}
+
+void ImGui::PopStyleCompact()
+{
+    ImGui::PopStyleVar(2);
+}
+
 bool ImField::BeginBlock(const char* label, const char* icon, ImVec4 iconColor)
 {
     const ImGuiTreeNodeFlags treeNodeFlags =

@@ -35,6 +35,9 @@ namespace ImGui {
 
     IMGUI_API bool AutoMenuItem(const char* path, const char* shortcut = NULL, bool selected = false, bool enabled = true, ImAutoMenuItemFlags flags = ImAutoMenuItemFlags_MainMenuBar);
 
+    IMGUI_API void PushStyleCompact();
+    IMGUI_API void PopStyleCompact();
+
     struct ScopedButtonColor
     {
         ScopedButtonColor(const ScopedButtonColor&) = delete;
@@ -127,6 +130,19 @@ namespace ImGui {
         ScopedFontSize operator=(const ScopedFontSize&) = delete;
         ScopedFontSize(float size) { ImGui::PushFontSize(size); }
         ~ScopedFontSize() { ImGui::PopFontSize(); }
+    };
+
+    struct ScopedCompact
+    {
+        ScopedCompact(const ScopedCompact&) = delete;
+        ScopedCompact operator=(const ScopedCompact&) = delete;
+        ScopedCompact()
+        {
+            ImGuiStyle& style = ImGui::GetStyle();
+            ImGui::PushStyleVarY(ImGuiStyleVar_FramePadding, (float)(int)(style.FramePadding.y * 0.60f));
+            ImGui::PushStyleVarY(ImGuiStyleVar_ItemSpacing, (float)(int)(style.ItemSpacing.y * 0.60f));
+        }
+        ~ScopedCompact() { ImGui::PopStyleVar(2); }
     };
 
     struct ScopedColorStack
