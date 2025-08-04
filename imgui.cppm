@@ -450,6 +450,10 @@ export namespace ImGui {
     using ImGui::DestroyPlatformWindows;
     using ImGui::FindViewportByID;
     using ImGui::FindViewportByPlatformHandle;
+
+    // imgui_internal.h
+    using ImGui::FocusItem;
+    using ImGui::ActivateItemByID;
 }
 
 
@@ -723,6 +727,8 @@ export namespace ImField {
     using ImField::DragInt3;
     using ImField::DragInt4;
     using ImField::InputText;
+    using ImField::InputTextMultiline;
+    using ImField::InputTextWithHint;
     using ImField::InputScalar;
     using ImField::InputInt;
     using ImField::InputUInt;

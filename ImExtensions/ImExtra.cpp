@@ -539,6 +539,24 @@ bool ImField::InputText(const char* label, std::string* str, ImGuiInputTextFlags
     return ImGui::InputText(label, str, flags, callback, user_data);
 }
 
+bool ImField::InputText(const char* label, char* buf, size_t buf_size, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data)
+{
+    Field(label);
+    return ImGui::InputText(label, buf, buf_size, flags, callback, user_data);
+}
+
+bool ImField::InputTextMultiline(const char* label, char* buf, size_t buf_size, const ImVec2& size, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data)
+{
+    Field(label);
+    return ImGui::InputTextMultiline(label, buf, buf_size, size, flags, callback, user_data);
+}
+
+bool ImField::InputTextWithHint(const char* label, const char* hint, char* buf, size_t buf_size, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data)
+{
+    Field(label);
+    return ImGui::InputTextWithHint(label, hint, buf, buf_size, flags, callback, user_data);
+}
+
 bool ImField::InputScalar(const char* label, void* p_data, int flags)
 {
     ImGui::ScopedID id(label);
