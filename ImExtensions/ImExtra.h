@@ -226,6 +226,7 @@ enum ImFieldDrageScalerEvent
 namespace ImField {
 
     IMGUI_API bool BeginBlock(const char* label, const char* icon = nullptr, ImVec4 iconColor = {});
+    IMGUI_API bool BeginBlock(const char* label, bool* enabled, const char* icon = nullptr, ImVec4 iconColor = {});
     IMGUI_API void EndBlock();
 
     IMGUI_API void Field(const char* name, float offsetX = 8.0f);

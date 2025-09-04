@@ -372,6 +372,42 @@ bool ImField::BeginBlock(const char* label, const char* icon, ImVec4 iconColor)
     return open;
 }
 
+bool ImField::BeginBlock(const char* label, bool* enabled, const char* icon, ImVec4 iconColor)
+{
+    const ImGuiTreeNodeFlags treeNodeFlags =
+        ImGuiTreeNodeFlags_DefaultOpen |
+        ImGuiTreeNodeFlags_Framed |
+        ImGuiTreeNodeFlags_SpanAvailWidth |
+        ImGuiTreeNodeFlags_AllowItemOverlap |
+        ImGuiTreeNodeFlags_FramePadding |
+        ImGuiTreeNodeFlags_CollapsingHeader;
+
+    ImGui::ScopedColorStack sc(ImGuiCol_Header, ImVec4(0, 0, 0, 0), ImGuiCol_HeaderHovered, ImVec4(0, 0, 0, 0), ImGuiCol_HeaderActive, ImVec4(0, 0, 0, 0));
+    ImGui::BeginChild(label, { 0, 0 }, ImGuiChildFlags_AutoResizeY | ImGuiChildFlags_AlwaysUseWindowPadding);
+
+    bool open = ImGui::TreeNodeEx(label, treeNodeFlags, "");
+
+    if (icon && strlen(icon) != 0)
+    {
+        ImGui::ScopedColor sc(ImGuiCol_Text, iconColor);
+        ImGui::SameLine();
+        ImGui::Text(icon);
+    }
+
+    ImGui::SameLine();
+
+    ImGuiStyle& style = ImGui::GetStyle();
+    ImGui::ShiftCursorY(4);
+    ImGui::PushStyleVarY(ImGuiStyleVar_FramePadding, (float)(int)(style.FramePadding.y * 0.20f));
+    ImGui::Checkbox("##Checkbox", enabled);
+    ImGui::PopStyleVar(1);
+
+    ImGui::SameLine();
+    ImGui::Text(label);
+
+    return open;
+}
+
 void ImField::EndBlock()
 {
     ImGui::EndChild();
