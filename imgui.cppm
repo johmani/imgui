@@ -772,8 +772,8 @@ export namespace ImGuizmo {
     using ImGuizmo::SetOrthographic;
     using ImGuizmo::DrawCubes;
     using ImGuizmo::DrawGrid;
-    enum ImGuizmo::OPERATION;
-    enum ImGuizmo::MODE;
+    enum OPERATION;
+    enum MODE;
     using ImGuizmo::Manipulate;
     using ImGuizmo::ViewManipulate;
     using ImGuizmo::SetAlternativeWindow;
@@ -788,7 +788,7 @@ export namespace ImGuizmo {
     using ImGuizmo::SetAxisMask;
     using ImGuizmo::SetPlaneLimit;
     using ImGuizmo::IsOver;
-    enum ImGuizmo::COLOR;
+    enum COLOR;
     using ImGuizmo::Style;
     using ImGuizmo::GetStyle;
 }
