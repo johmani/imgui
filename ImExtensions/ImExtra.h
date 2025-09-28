@@ -38,6 +38,30 @@ namespace ImGui {
     IMGUI_API void PushStyleCompact();
     IMGUI_API void PopStyleCompact();
 
+    template<uint32_t N>
+    IMGUI_API bool Combo(const char* label, const std::array<std::string_view, N>& arr, std::string_view current, void* selectedIndex)
+    {
+        bool res = false;
+        if (ImGui::BeginCombo(label, current.data()))
+        {
+            for (int i = 0; i < arr.size(); i++)
+            {
+                bool isSelected = current == arr[i];
+                if (ImGui::Selectable(arr[i].data(), isSelected))
+                {
+                    *(int*)selectedIndex = i;
+                    res = true;
+                }
+
+                if (isSelected)
+                    ImGui::SetItemDefaultFocus();
+            }
+
+            ImGui::EndCombo();
+        }
+        return res;
+    }
+
     struct ScopedButtonColor
     {
         ScopedButtonColor(const ScopedButtonColor&) = delete;
