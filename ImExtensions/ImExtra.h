@@ -62,6 +62,52 @@ namespace ImGui {
         return res;
     }
 
+    template<uint32_t N>
+    IMGUI_API bool ComboBox(const char* label, const std::array<std::string_view, N>& arr, std::string_view current, void* selectedIndex)
+    {
+        bool res = false;
+
+        auto& style = ImGui::GetStyle();
+        float dpiScale = ImGui::GetWindowDpiScale();
+        float scale = ImGui::GetIO().FontGlobalScale * dpiScale;
+
+        ImVec2 buttonSize(
+            70.0f * scale + style.FramePadding.x * 2.0f,
+            16.0f * scale + style.FramePadding.y * 2.0f
+        );
+
+        float avl = ImGui::GetContentRegionAvail().x;
+        int countInRow = (buttonSize.x > 0.0f) ? (int)(avl / buttonSize.x) : 1;
+        if (countInRow < 1) countInRow = 1;
+
+        for (int i = 0; i < (int)(arr.size()); i++)
+        {
+            if (i % countInRow == 0)
+            {
+                float offset = (ImGui::GetContentRegionAvail().x - (buttonSize.x + 1.0f) * countInRow) * 0.5f;
+                if (offset > 0.0f)
+                    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + offset);
+            }
+            else
+            {
+                ImGui::SameLine(0.0f, 1.0f);
+            }
+
+            bool isSelected = (current == arr[i]);
+
+            if (ImGui::SelectableButton(arr[i].data(), buttonSize, isSelected))
+            {
+                *(int*)selectedIndex = i;
+                res = true;
+            }
+
+            if (isSelected)
+                ImGui::SetItemDefaultFocus();
+        }
+
+        return res;
+    }
+
     struct ScopedButtonColor
     {
         ScopedButtonColor(const ScopedButtonColor&) = delete;

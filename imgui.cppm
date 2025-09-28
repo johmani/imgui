@@ -691,6 +691,7 @@ export namespace ImGui {
     using ImGui::AutoMenuItem;
     using ImGui::PushStyleCompact;
     using ImGui::PopStyleCompact;
+    using ImGui::ComboBox;
 
     using ImGui::ScopedButtonColor;
     using ImGui::ScopedColor;
