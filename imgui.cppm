@@ -726,6 +726,10 @@ export namespace ImField {
     using ImField::DragInt2;
     using ImField::DragInt3;
     using ImField::DragInt4;
+    using ImField::DragUInt;
+    using ImField::DragUInt2;
+    using ImField::DragUInt3;
+    using ImField::DragUInt4;
     using ImField::InputText;
     using ImField::InputTextMultiline;
     using ImField::InputTextWithHint;
