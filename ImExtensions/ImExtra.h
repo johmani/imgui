@@ -299,7 +299,7 @@ namespace ImField {
     IMGUI_API void Separator();
 
     template<uint32_t N>
-    IMGUI_API bool Combo(const char* label, const std::array<std::string_view, N>& arr, std::string_view current, int& selectedIndex)
+    IMGUI_API bool Combo(const char* label, const std::array<std::string_view, N>& arr, std::string_view current, void* selectedIndex)
     {
         bool res = false;
         Field(label);
@@ -310,7 +310,7 @@ namespace ImField {
                 bool isSelected = current == arr[i];
                 if (ImGui::Selectable(arr[i].data(), isSelected))
                 {
-                    selectedIndex = i;
+                    *(int*)selectedIndex = i;
                     res = true;
                 }
 
