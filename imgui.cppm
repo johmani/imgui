@@ -753,6 +753,7 @@ export namespace ImField {
     using ImField::SeparatorText;
     using ImField::Separator;
     using ImField::ImageButton;
+    using ImField::ComboBox;
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -63,7 +63,7 @@ namespace ImGui {
     }
 
     template<uint32_t N>
-    IMGUI_API bool ComboBox(const char* label, const std::array<std::string_view, N>& arr, std::string_view current, void* selectedIndex)
+    IMGUI_API bool ComboBox(const char* label, const std::array<std::string_view, N>& arr, std::string_view current, void* selectedIndex, ImVec2 size = { 70.0f, 16.0f})
     {
         bool res = false;
 
@@ -71,14 +71,25 @@ namespace ImGui {
         float dpiScale = ImGui::GetWindowDpiScale();
         float scale = ImGui::GetIO().FontGlobalScale * dpiScale;
 
+        size.x = size.x == 0.0f ? 70.0f : size.x;
+        size.y = size.y == 0.0f ? 16.0f : size.y;
+
         ImVec2 buttonSize(
-            70.0f * scale + style.FramePadding.x * 2.0f,
-            16.0f * scale + style.FramePadding.y * 2.0f
+            size.x * scale + style.FramePadding.x * 2.0f,
+            size.y * scale + style.FramePadding.y * 2.0f
         );
 
         float avl = ImGui::GetContentRegionAvail().x;
         int countInRow = (buttonSize.x > 0.0f) ? (int)(avl / buttonSize.x) : 1;
         if (countInRow < 1) countInRow = 1;
+
+        ImGui::BeginGroup();
+
+        if (label && strlen(label) >= 2 && label[0] != '#' && label[1] != '#')
+        {
+            ImGui::TextUnformatted(label);
+            //ImGui::SameLine();
+        }
 
         for (int i = 0; i < (int)(arr.size()); i++)
         {
@@ -104,6 +115,7 @@ namespace ImGui {
             if (isSelected)
                 ImGui::SetItemDefaultFocus();
         }
+        ImGui::EndGroup();
 
         return res;
     }
@@ -372,5 +384,12 @@ namespace ImField {
             ImGui::EndCombo();
         }
         return res;
+    }
+
+    template<uint32_t N>
+    IMGUI_API bool ComboBox(const char* label, const std::array<std::string_view, N>& arr, std::string_view current, void* selectedIndex, ImVec2 size = { 70.0f, 16.0f })
+    {
+        Field(label);
+        return ImGui::ComboBox("##label", arr, current, selectedIndex, size);
     }
 }
