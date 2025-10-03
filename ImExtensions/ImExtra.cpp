@@ -366,6 +366,8 @@ bool ImField::BeginBlock(const char* label, const char* icon, ImVec4 iconColor)
         ImGui::Text(icon);
     }
 
+    ImGui::BeginDisabled(false);
+
     ImGui::SameLine();
     ImGui::Text(label);
 
@@ -402,6 +404,8 @@ bool ImField::BeginBlock(const char* label, bool* enabled, const char* icon, ImV
     ImGui::Checkbox("##Checkbox", enabled);
     ImGui::PopStyleVar(1);
 
+    ImGui::BeginDisabled(!*enabled);
+
     ImGui::SameLine();
     ImGui::Text(label);
 
@@ -410,6 +414,7 @@ bool ImField::BeginBlock(const char* label, bool* enabled, const char* icon, ImV
 
 void ImField::EndBlock()
 {
+    ImGui::EndDisabled();
     ImGui::EndChild();
 }
 
