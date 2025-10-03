@@ -398,6 +398,7 @@ bool ImField::BeginBlock(const char* label, bool* enabled, const char* icon, ImV
 
     ImGui::SameLine();
 
+    ImGui::BeginGroup();
     ImGuiStyle& style = ImGui::GetStyle();
     ImGui::ShiftCursorY(4);
     ImGui::PushStyleVarY(ImGuiStyleVar_FramePadding, (float)(int)(style.FramePadding.y * 0.20f));
@@ -408,6 +409,7 @@ bool ImField::BeginBlock(const char* label, bool* enabled, const char* icon, ImV
 
     ImGui::SameLine();
     ImGui::Text(label);
+    ImGui::EndGroup();
 
     return open;
 }
