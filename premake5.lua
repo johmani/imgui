@@ -11,7 +11,6 @@ project "imgui"
 
         "*.h",
         "*.cpp",
-        "*.cppm",
 
         "ImExtensions/*.h",
         "ImExtensions/*.cpp",
