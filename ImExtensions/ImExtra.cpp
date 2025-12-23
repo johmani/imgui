@@ -506,6 +506,62 @@ bool ImField::DragUInt4(const char* label, unsigned int v[4], float v_speed, uns
     return ImGui::DragScalarN(label, ImGuiDataType_U32, v, 4, v_speed, &v_min, &v_max, format, flags);;
 }
 
+bool ImField::SliderFloat(const char* label, float* v, float v_min, float v_max, const char* format, ImGuiSliderFlags flags)
+{
+    Field(label);
+
+    return ImGui::SliderScalar(label, ImGuiDataType_Float, v, &v_min, &v_max, format, flags);
+}
+
+bool ImField::SliderFloat2(const char* label, float v[2], float v_min, float v_max, const char* format, ImGuiSliderFlags flags)
+{
+    Field(label);
+
+    return ImGui::SliderScalarN(label, ImGuiDataType_Float, v, 2, &v_min, &v_max, format, flags);
+}
+
+bool ImField::SliderFloat3(const char* label, float v[3], float v_min, float v_max, const char* format, ImGuiSliderFlags flags)
+{
+    Field(label);
+
+    return ImGui::SliderScalarN(label, ImGuiDataType_Float, v, 3, &v_min, &v_max, format, flags);
+}
+
+bool ImField::SliderFloat4(const char* label, float v[4], float v_min, float v_max, const char* format, ImGuiSliderFlags flags)
+{
+    Field(label);
+
+    return ImGui::SliderScalarN(label, ImGuiDataType_Float, v, 4, &v_min, &v_max, format, flags);
+}
+
+bool ImField::SliderInt(const char* label, int* v, int v_min, int v_max, const char* format, ImGuiSliderFlags flags)
+{
+    Field(label);
+
+    return ImGui::SliderScalar(label, ImGuiDataType_S32, v, &v_min, &v_max, format, flags);
+}
+
+bool ImField::SliderInt2(const char* label, int v[2], int v_min, int v_max, const char* format, ImGuiSliderFlags flags)
+{
+    Field(label);
+
+    return ImGui::SliderScalarN(label, ImGuiDataType_S32, v, 2, &v_min, &v_max, format, flags);
+}
+
+bool ImField::SliderInt3(const char* label, int v[3], int v_min, int v_max, const char* format, ImGuiSliderFlags flags)
+{
+    Field(label);
+
+    return ImGui::SliderScalarN(label, ImGuiDataType_S32, v, 3, &v_min, &v_max, format, flags);
+}
+
+bool ImField::SliderInt4(const char* label, int v[4], int v_min, int v_max, const char* format, ImGuiSliderFlags flags)
+{
+    Field(label);
+
+    return ImGui::SliderScalarN(label, ImGuiDataType_S32, v, 4, &v_min, &v_max, format, flags);
+}
+
 ImFieldDrageScalerEvent ImField::DragScalarN(const char* label, ImGuiDataType data_type, void* p_data, int components, float v_speed, const void* p_min, const void* p_max, const char* format, ImGuiSliderFlags flags)
 {
     ImGuiWindow* window = ImGui::GetCurrentWindow();
