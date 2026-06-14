@@ -425,6 +425,7 @@ void ImField::Field(const char* name, float offsetX)
     ImGui::TableNextRow();
     ImGui::TableNextColumn();
     ImGui::ShiftCursorX(offsetX * ImGui::GetIO().FontGlobalScale * ImGui::GetWindowDpiScale());
+    ImGui::AlignTextToFramePadding();
     ImGui::Text(name);
     ImGui::TableNextColumn();
     ImGui::SetNextItemWidth(-FLT_MIN);
@@ -752,13 +753,13 @@ void ImField::TextLinkOpenURL(const char* label, const char* url)
 bool ImField::ColorEdit3(const char* label, float col[3], ImGuiColorEditFlags flags)
 {
     Field(label);
-    return ImGui::ColorEdit3(label, col, flags);
+    return ImGui::ColorEdit3("##label", col, flags);
 }
 
 bool ImField::ColorEdit4(const char* label, float col[4], ImGuiColorEditFlags flags)
 {
     Field(label);
-    return ImGui::ColorEdit4(label, col, flags);
+    return ImGui::ColorEdit4("##label", col, flags);
 }
 
 void ImField::SeparatorText(const char* text)
