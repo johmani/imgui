@@ -111,9 +111,28 @@
         constexpr ImVec4(const MyVec4& f) : x(f.x), y(f.y), z(f.z), w(f.w) {}   \
         operator MyVec4() const { return MyVec4(x,y,z,w); }
 */
-#define IM_VEC2_CLASS_EXTRA                                                     \
-        constexpr ImVec2(float val) : x(val), y(val) {} 
-        
+
+#ifdef IM_MATH_CONVERSIONS
+
+#define IM_VEC2_CLASS_EXTRA \
+    constexpr ImVec2(float v) : x(v), y(v) {} \
+    constexpr ImVec2(const Math::float2& v) : x(v.x), y(v.y) {} \
+    constexpr ImVec2& operator=(const Math::float2& v) { x = v.x; y = v.y; return *this; } \
+    constexpr operator Math::float2() const { return { x, y }; }
+
+#define IM_VEC4_CLASS_EXTRA \
+    constexpr ImVec4(float v) : x(v), y(v), z(v), w(v) {} \
+    constexpr ImVec4(const Math::float4& v) : x(v.x), y(v.y), z(v.z), w(v.w) {} \
+    constexpr ImVec4& operator=(const Math::float4& v) { x = v.x; y = v.y; z = v.z; w = v.w; return *this; } \
+    constexpr operator Math::float4() const { return { x, y, z, w }; }
+
+#else
+
+#define IM_VEC2_CLASS_EXTRA constexpr ImVec2(float v) : x(v), y(v) {}
+#define IM_VEC4_CLASS_EXTRA constexpr ImVec4(float v) : x(v), y(v), z(v), w(v) {}
+
+#endif
+
 //---- ...Or use Dear ImGui's own very basic math operators.
 #define IMGUI_DEFINE_MATH_OPERATORS
 
