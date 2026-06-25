@@ -168,8 +168,8 @@ namespace ImGui {
     {
         ScopedFont(const ScopedFont&) = delete;
         ScopedFont operator=(const ScopedFont&) = delete;
-        ScopedFont(ImFont* font, float size = -1) { ImGui::PushFont(font, size * ImGui::GetWindowDpiScale()); }
-        ScopedFont(int index, float size = -1) { ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[index], size * ImGui::GetWindowDpiScale()); }
+        ScopedFont(ImFont* font, float size = GetStyle().FontSizeBase) { ImGui::PushFont(font, size * ImGui::GetWindowDpiScale()); }
+        ScopedFont(int index, float size = GetStyle().FontSizeBase) { ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[index], size * ImGui::GetWindowDpiScale()); }
         ~ScopedFont() { ImGui::PopFont(); }
     };
 
@@ -210,8 +210,8 @@ namespace ImGui {
     {
         ScopedFontSize(const ScopedFontSize&) = delete;
         ScopedFontSize operator=(const ScopedFontSize&) = delete;
-        ScopedFontSize(float size) { ImGui::PushFontSize(size); }
-        ~ScopedFontSize() { ImGui::PopFontSize(); }
+        ScopedFontSize(float size) { ImGui::PushFont(NULL, size); }
+        ~ScopedFontSize() { ImGui::PopFont(); }
     };
 
     struct ScopedCompact

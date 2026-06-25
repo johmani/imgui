@@ -350,7 +350,7 @@ bool ImField::BeginBlock(const char* label, const char* icon, ImVec4 iconColor)
         ImGuiTreeNodeFlags_DefaultOpen |
         ImGuiTreeNodeFlags_Framed |
         ImGuiTreeNodeFlags_SpanAvailWidth |
-        ImGuiTreeNodeFlags_AllowItemOverlap |
+        ImGuiTreeNodeFlags_AllowOverlap |
         ImGuiTreeNodeFlags_FramePadding |
         ImGuiTreeNodeFlags_CollapsingHeader;
 
@@ -380,7 +380,7 @@ bool ImField::BeginBlock(const char* label, bool* enabled, const char* icon, ImV
         ImGuiTreeNodeFlags_DefaultOpen |
         ImGuiTreeNodeFlags_Framed |
         ImGuiTreeNodeFlags_SpanAvailWidth |
-        ImGuiTreeNodeFlags_AllowItemOverlap |
+        ImGuiTreeNodeFlags_AllowOverlap |
         ImGuiTreeNodeFlags_FramePadding |
         ImGuiTreeNodeFlags_CollapsingHeader;
 
