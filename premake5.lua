@@ -3,7 +3,7 @@ project "imgui"
     language "C++"
     cppdialect "C++latest"
     staticruntime "Off"
-
+    implibdir "%{cfg.objdir}"
     targetdir (binOutputDir)
     objdir (IntermediatesOutputDir)
 
