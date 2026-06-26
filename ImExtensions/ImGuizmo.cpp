@@ -1341,7 +1341,7 @@ namespace IMGUIZMO_NAMESPACE
             circlePos[i] = worldToPos(pos + gContext.mModel.v.position, gContext.mViewProjection);
          }
          drawList->AddConvexPolyFilled(circlePos, halfCircleSegmentCount + 1, GetColorU32(ROTATION_USING_FILL));
-         drawList->AddPolyline(circlePos, halfCircleSegmentCount + 1, GetColorU32(ROTATION_USING_BORDER), true, gContext.mStyle.RotationLineThickness);
+         drawList->AddPolyline(circlePos, halfCircleSegmentCount + 1, GetColorU32(ROTATION_USING_BORDER), false, gContext.mStyle.RotationLineThickness);
 
          ImVec2 destinationPosOnScreen = circlePos[1];
          char tmps[512];
@@ -1604,7 +1604,7 @@ namespace IMGUIZMO_NAMESPACE
                   vec_t cornerWorldPos = (dirPlaneX * quadUV[j * 2] + dirPlaneY * quadUV[j * 2 + 1]) * gContext.mScreenFactor;
                   screenQuadPts[j] = worldToPos(cornerWorldPos, gContext.mMVP);
                }
-               drawList->AddPolyline(screenQuadPts, 4, GetColorU32(DIRECTION_X + i), true, 1.0f);
+               drawList->AddPolyline(screenQuadPts, 4, GetColorU32(DIRECTION_X + i), false, 1.0f);
                drawList->AddConvexPolyFilled(screenQuadPts, 4, colors[i + 4]);
             }
          }
@@ -3405,7 +3405,7 @@ namespace IMGUIZMO_NAMESPACE
            }
        }
 
-       if (selection != -1 && ImGui::IsMouseClicked(ImGuiPopupFlags_MouseButtonLeft))
+       if (selection != -1 && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
        {
            float modelMat[16];
            internal::invert4x4(viewMatrix, modelMat);
@@ -3440,4 +3440,4 @@ namespace IMGUIZMO_NAMESPACE
 
        return false;
    }
-};
+}
