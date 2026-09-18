@@ -291,8 +291,7 @@ void ImGui::ShiftCursorY(float offset)
 
 void ImGui::ShiftCursor(ImVec2 offset)
 {
-    const ImVec2 cursor = ImGui::GetCursorPos();
-    ImGui::SetCursorPos(ImVec2(cursor.x, cursor.y) + offset);
+    ImGui::SetCursorPos(ImGui::GetCursorPos() + offset);
 }
 
 bool ImGui::AutoMenuItem(const char* path, const char* shortcut, bool selected, bool enabled, ImAutoMenuItemFlags flags)
