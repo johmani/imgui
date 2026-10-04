@@ -126,9 +126,9 @@ namespace ImGui {
         ScopedButtonColor operator=(const ScopedButtonColor&) = delete;
         ScopedButtonColor(const ImVec4& baseColor)
         {
-            ImGui::PushStyleColor(ImGuiCol_Button, { baseColor.x, baseColor.y, baseColor.z, 0.8f });
+            ImGui::PushStyleColor(ImGuiCol_Button, { baseColor.x, baseColor.y, baseColor.z, 1.0f });
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, { baseColor.x, baseColor.y, baseColor.z, 0.9f });
-            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { baseColor.x, baseColor.y, baseColor.z, 1.0f });
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { baseColor.x, baseColor.y, baseColor.z, 0.85f });
         }
         ~ScopedButtonColor() { ImGui::PopStyleColor(3); }
     };
