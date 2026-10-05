@@ -235,37 +235,25 @@ bool ImGui::InputTextWithHint(const char* label, const char* hint, std::string* 
 
 bool ImGui::SelectableButton(const char* label, const ImVec2& size, bool selected)
 {
-    auto& colors = ImGui::GetStyle().Colors;
+    const ImVec4* c = ImGui::GetStyle().Colors;
 
     if (selected)
     {
-        ImGui::PushStyleColor(ImGuiCol_Button, colors[ImGuiCol_ButtonActive]);
+        ImGui::PushStyleColor(ImGuiCol_Button, c[ImGuiCol_ButtonActive]);
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImLerp(c[ImGuiCol_ButtonActive], c[ImGuiCol_Text], 0.15f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImLerp(c[ImGuiCol_ButtonActive], c[ImGuiCol_Text], 0.30f));
         ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]);
     }
 
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, colors[ImGuiCol_ButtonActive] - ImVec4(0, 0, 0, 0.1f));
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive, colors[ImGuiCol_ButtonActive]);
-
-    if (ImGui::Button(label, size))
-    {
-        if (selected)
-        {
-            ImGui::PopStyleColor();
-            ImGui::PopFont();
-        }
-        ImGui::PopStyleColor(2);
-
-        return true;
-    }
+    const bool b = ImGui::Button(label, size);
 
     if (selected)
     {
-        ImGui::PopStyleColor();
         ImGui::PopFont();
+        ImGui::PopStyleColor(3);
     }
-    ImGui::PopStyleColor(2);
 
-    return false;
+    return b;
 }
 
 void ImGui::ToolTip(const char* fmt, ...)
