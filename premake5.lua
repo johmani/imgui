@@ -1,11 +1,15 @@
 project "imgui"
-    kind "SharedLib"
     language "C++"
     cppdialect "C++latest"
-    staticruntime "Off"
     implibdir "%{cfg.objdir}"
-    targetdir (binOutputDir)
     objdir (IntermediatesOutputDir)
+
+    ProjectKind("SharedLib")
+    filter "kind:SharedLib"
+        targetdir (binOutputDir)
+    filter "kind:StaticLib"
+        targetdir (libOutputDir)
+    filter {}
 
     files {
 
@@ -40,9 +44,8 @@ project "imgui"
 
     filter "configurations:Release"
         runtime "Release"
-        optimize "On"
+        symbols "On"
 
     filter "configurations:Dist"
         runtime "Release"
-        optimize "Speed"
         symbols "Off"
