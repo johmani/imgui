@@ -242,14 +242,12 @@ bool ImGui::SelectableButton(const char* label, const ImVec2& size, bool selecte
         ImGui::PushStyleColor(ImGuiCol_Button, c[ImGuiCol_ButtonActive]);
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImLerp(c[ImGuiCol_ButtonActive], c[ImGuiCol_Text], 0.15f));
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImLerp(c[ImGuiCol_ButtonActive], c[ImGuiCol_Text], 0.30f));
-        ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]);
     }
 
     const bool b = ImGui::Button(label, size);
 
     if (selected)
     {
-        ImGui::PopFont();
         ImGui::PopStyleColor(3);
     }
 
@@ -387,7 +385,7 @@ bool ImField::BeginBlock(const char* label, bool* enabled, const char* icon, ImV
 
     ImGui::BeginGroup();
     ImGuiStyle& style = ImGui::GetStyle();
-    ImGui::ShiftCursorY(4);
+    ImGui::ShiftCursorY(4.0f * ImGui::GetUiScale());
     ImGui::PushStyleVarY(ImGuiStyleVar_FramePadding, (float)(int)(style.FramePadding.y * 0.20f));
     ImGui::Checkbox("##Checkbox", enabled);
     ImGui::PopStyleVar(1);
@@ -411,7 +409,7 @@ void ImField::Field(const char* name, float offsetX)
 {
     ImGui::TableNextRow();
     ImGui::TableNextColumn();
-    ImGui::ShiftCursorX(offsetX * ImGui::GetIO().FontGlobalScale * ImGui::GetWindowDpiScale());
+    ImGui::ShiftCursorX(offsetX * ImGui::GetUiScale());
     ImGui::AlignTextToFramePadding();
     ImGui::Text(name);
     ImGui::TableNextColumn();
@@ -556,8 +554,6 @@ ImFieldDrageScalerEvent ImField::DragScalarN(const char* label, ImGuiDataType da
     if (window->SkipItems)
         return ImFieldDrageScalerEvent_None;
 
-    float scale = ImGui::GetIO().FontGlobalScale * ImGui::GetWindowDpiScale();
-
     ImVec4 colors[] = {
        
         ImVec4(1.0f, 0.2117647f, 0.3254902f, 1.0f),
@@ -583,7 +579,8 @@ ImFieldDrageScalerEvent ImField::DragScalarN(const char* label, ImGuiDataType da
 
     ImGui::BeginGroup();
     ImGui::PushID(label);
-    float bw = 6 * scale;
+    const float uiScale = ImGui::GetUiScale();
+    const float bw = 6.0f * uiScale;
     ImGui::PushMultiItemsWidths(components, ImGui::CalcItemWidth() - bw * components);
     size_t type_size = GDataTypeInfo[data_type].Size;
     for (int i = 0; i < components; i++)
@@ -591,7 +588,7 @@ ImFieldDrageScalerEvent ImField::DragScalarN(const char* label, ImGuiDataType da
         ImGui::PushStyleColor(ImGuiCol_Button, colors[i * 3 + 0]);
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, colors[i * 3 + 1]);
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, colors[i * 3 + 2]);
-        ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 1);
+        ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 1.0f * uiScale);
         ImGui::PushID(i + components);
         if (i > 0) ImGui::SameLine(0, g.Style.ItemInnerSpacing.x);
         value = (ImFieldDrageScalerEvent)(ImGui::Button("", ImVec2(bw, 0)) ? i + 2 : value);

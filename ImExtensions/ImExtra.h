@@ -19,6 +19,12 @@ inline constexpr uint32_t ImColorU32(int R, int G, int B, int A) noexcept
 
 namespace ImGui {
 
+    inline float GetUiScale()
+    {
+        const ImGuiStyle& style = GetStyle();
+        return style.FontScaleMain * style.FontScaleDpi;
+    }
+
     IMGUI_API bool TextButton(const char* label, const ImVec2& size_arg = ImVec2(0, 0));
 
     IMGUI_API bool InputText(const char* label, std::string* str, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = nullptr, void* user_data = nullptr);
@@ -68,15 +74,13 @@ namespace ImGui {
         bool res = false;
 
         auto& style = ImGui::GetStyle();
-        float dpiScale = ImGui::GetWindowDpiScale();
-        float scale = ImGui::GetIO().FontGlobalScale * dpiScale;
 
         size.x = size.x == 0.0f ? 70.0f : size.x;
         size.y = size.y == 0.0f ? 16.0f : size.y;
 
         ImVec2 buttonSize(
-            size.x * scale + style.FramePadding.x * 2.0f,
-            size.y * scale + style.FramePadding.y * 2.0f
+            size.x + style.FramePadding.x * 2.0f,
+            size.y + style.FramePadding.y * 2.0f
         );
 
         float avl = ImGui::GetContentRegionAvail().x;
@@ -168,8 +172,8 @@ namespace ImGui {
     {
         ScopedFont(const ScopedFont&) = delete;
         ScopedFont operator=(const ScopedFont&) = delete;
-        ScopedFont(ImFont* font, float size = GetStyle().FontSizeBase) { ImGui::PushFont(font, size * ImGui::GetWindowDpiScale()); }
-        ScopedFont(int index, float size = GetStyle().FontSizeBase) { ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[index], size * ImGui::GetWindowDpiScale()); }
+        ScopedFont(ImFont* font, float size = GetStyle().FontSizeBase) { ImGui::PushFont(font, size); }
+        ScopedFont(int index, float size = GetStyle().FontSizeBase) { ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[index], size); }
         ~ScopedFont() { ImGui::PopFont(); }
     };
 
@@ -311,7 +315,7 @@ namespace ImField {
     IMGUI_API bool BeginBlock(const char* label, bool* enabled, const char* icon = nullptr, ImVec4 iconColor = {});
     IMGUI_API void EndBlock();
 
-    IMGUI_API void Field(const char* name, float offsetX = 8.0f);
+    IMGUI_API void Field(const char* name, float offsetX = 8.0f); // offsetX is authored at 100%, the scale is applied inside
 
     IMGUI_API bool DragFloat(const char* label, float* v, float v_speed = 1.0f, float v_min = 0.0f, float v_max = 0.0f, const char* format = "%.3f", ImGuiSliderFlags flags = 0);
     IMGUI_API bool DragFloat2(const char* label, float v[2], float v_speed = 1.0f, float v_min = 0.0f, float v_max = 0.0f, const char* format = "%.3f", ImGuiSliderFlags flags = 0);

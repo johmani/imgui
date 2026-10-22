@@ -113,7 +113,7 @@ Calling the `ImGui::ShowDemoWindow()` function will create a demo window showcas
 - [imgui_explorer](https://pthom.github.io/imgui_explorer): Web version of the demo w/ source code browser, courtesy of [@pthom](https://github.com/pthom).
 
 You should be able to build the examples from sources. If you don't, let us know! If you want to have a quick look at some Dear ImGui features, you can download Windows binaries of the demo app here:
-- [imgui-demo-binaries-20260225.zip](https://www.dearimgui.com/binaries/imgui-demo-binaries-20260225.zip) (Windows, 1.92.6, built 2026/02/25, master) or [older binaries](https://www.dearimgui.com/binaries).
+- [imgui-demo-binaries-20261015-win32.zip](https://www.dearimgui.com/binaries/imgui-demo-binaries-20261015-win32.zip) (Win32, 1.93.0, built 2026/10/15, master) or [older binaries](https://www.dearimgui.com/binaries).
 
 ### Gallery
 
@@ -141,7 +141,7 @@ Integrating Dear ImGui within your custom engine is a matter of mainly 1) wiring
 - Generally, **make sure to spend time reading the [FAQ](https://www.dearimgui.com/faq), comments, and the examples applications!**
 
 Officially maintained backends (in repository):
-- Renderers: DirectX9, DirectX10, DirectX11, DirectX12, Metal, OpenGL/ES/ES2, SDL_GPU, SDL_Renderer2/3, Vulkan, WebGPU.
+- Renderers: DirectX9, DirectX10, DirectX11, DirectX12, Metal 3/4, OpenGL/ES/ES2, SDL_GPU, SDL_Renderer2/3, Vulkan, WebGPU.
 - Platforms: GLFW, SDL2/SDL3, Win32, Glut, OSX, Android.
 - Frameworks: Allegro5, Emscripten.
 
