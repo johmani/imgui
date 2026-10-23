@@ -37,15 +37,3 @@ project "imgui"
     filter "system:linux"
         pic "On"
         systemversion "latest"
-
-    filter "configurations:Debug"
-        runtime "Debug"
-        symbols "On"
-
-    filter "configurations:Release"
-        runtime "Release"
-        symbols "On"
-
-    filter "configurations:Dist"
-        runtime "Release"
-        symbols "Off"
