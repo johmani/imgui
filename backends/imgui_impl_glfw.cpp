@@ -252,6 +252,7 @@ struct ImGui_ImplGlfw_Data
 #endif
     bool                    MouseIgnoreButtonUpWaitForFocusLoss;
     bool                    MouseIgnoreButtonUp;
+    bool                    WantUpdateMonitors;
     ImVec2                  LastValidMousePos;
     GLFWwindow*             KeyOwnerWindows[GLFW_KEY_LAST];
     bool                    IsWayland;
@@ -629,7 +630,8 @@ void ImGui_ImplGlfw_CharCallback(GLFWwindow* window, unsigned int c)
 
 void ImGui_ImplGlfw_MonitorCallback(GLFWmonitor*, int)
 {
-    // This function is technically part of the API even if we stopped using the callback, so leaving it around.
+    ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
+    bd->WantUpdateMonitors = true;
 }
 
 #ifdef EMSCRIPTEN_USE_EMBEDDED_GLFW3
@@ -977,7 +979,8 @@ static void ImGui_ImplGlfw_UpdateMouseData()
         // See https://github.com/glfw/glfw/issues/1236 if you want to help in making this a GLFW feature.
 #if GLFW_HAS_MOUSE_PASSTHROUGH
         const bool window_no_input = (viewport->Flags & ImGuiViewportFlags_NoInputs) != 0;
-        glfwSetWindowAttrib(window, GLFW_MOUSE_PASSTHROUGH, window_no_input);
+        if (glfwGetWindowAttrib(window, GLFW_MOUSE_PASSTHROUGH) != (int)window_no_input)
+            glfwSetWindowAttrib(window, GLFW_MOUSE_PASSTHROUGH, window_no_input);
 #endif
 #if GLFW_HAS_MOUSE_PASSTHROUGH || GLFW_HAS_WINDOW_HOVERED
         if (glfwGetWindowAttrib(window, GLFW_HOVERED))
@@ -1206,7 +1209,11 @@ void ImGui_ImplGlfw_NewFrame()
 
     // Setup main viewport size (every frame to accommodate for window resizing)
     ImGui_ImplGlfw_GetWindowSizeAndFramebufferScale(bd->Window, &io.DisplaySize, &io.DisplayFramebufferScale);
-    ImGui_ImplGlfw_UpdateMonitors();
+    if (bd->WantUpdateMonitors)
+    {
+        ImGui_ImplGlfw_UpdateMonitors();
+        bd->WantUpdateMonitors = false;
+    }
 
     // Setup time step
     // (Accept glfwGetTime() not returning a monotonically increasing value. Seems to happens on disconnecting peripherals and probably on VMs and Emscripten, see #6491, #6189, #6114, #3644)
@@ -1704,6 +1711,10 @@ static LRESULT CALLBACK ImGui_ImplGlfw_WndProc(HWND hWnd, UINT msg, WPARAM wPara
     case WM_MBUTTONDOWN: case WM_MBUTTONDBLCLK: case WM_MBUTTONUP:
     case WM_XBUTTONDOWN: case WM_XBUTTONDBLCLK: case WM_XBUTTONUP:
         io.AddMouseSourceEvent(GetMouseSourceFromMessageExtraInfo());
+        break;
+
+    case WM_DISPLAYCHANGE: case WM_SETTINGCHANGE:
+        bd->WantUpdateMonitors = true;
         break;
 
         // We have submitted https://github.com/glfw/glfw/pull/1568 to allow GLFW to support "transparent inputs".
